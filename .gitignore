@@ -1,0 +1,8 @@
+*.*
+Makefile
+!.gitignore
+!*/src/**/*.h
+!*/src/**/*.c
+platform_config.h
+platform.h
+platform.c
