@@ -10,13 +10,13 @@
 
 #include <stdint.h> /* uint32_t */
 
-typedef uint32_t pixel_t;
+typedef uint32_t pixel_t; /* ARGB format */
 
-#define PIXEL_BLACK ((pixel_t) 0x000000)
-#define PIXEL_WHITE ((pixel_t) 0xFFFFFF)
-#define PIXEL_RED ((pixel_t) 0xFF0000)
-#define PIXEL_GREEN ((pixel_t) 0x00FF00)
-#define PIXEL_BLUE ((pixel_t) 0x0000FF)
+#define PIXEL_ALPHA ((pixel_t) 0xFF000000)
+#define PIXEL_INVISIBLE ((pixel_t) 0x00000000)
+#define PIXEL_RED ((pixel_t) 0x00FF0000)
+#define PIXEL_GREEN ((pixel_t) 0x0000FF00)
+#define PIXEL_BLUE ((pixel_t) 0x000000FF)
 
 typedef struct image
 {
@@ -24,6 +24,8 @@ typedef struct image
 	size_t y;
 	pixel_t *pixels;
 } image_t;
+
+void pixel_alpha_compositing(pixel_t *target, pixel_t value);
 
 image_t *image_alloc(size_t x, size_t y);
 void image_free(image_t *image);
