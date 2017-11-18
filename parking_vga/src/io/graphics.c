@@ -101,3 +101,8 @@ inline void graphics_render(graphics_t graphics)
 {
 	graphics.flush_vbuffer(graphics.context);
 }
+
+inline void graphics_destroy(graphics_t graphics)
+{
+	graphics.destroy(graphics.context);
+}

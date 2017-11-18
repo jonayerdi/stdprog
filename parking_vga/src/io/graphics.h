@@ -18,6 +18,7 @@ typedef struct graphics
 	size_t y;
 	pixel_t *(*get_vbuffer)(void *context);
 	void (*flush_vbuffer)(void *context);
+	void (*destroy)(void *context);
 	void *context;
 } graphics_t;
 
@@ -29,3 +30,4 @@ void graphics_draw_rect(graphics_t graphics, pixel_t color, size_t x1, size_t x2
 void graphics_draw_circle(graphics_t graphics, pixel_t color, size_t x, size_t y, size_t radius);
 void graphics_draw_image(graphics_t graphics, image_t image, size_t x, size_t y);
 void graphics_render(graphics_t graphics);
+void graphics_destroy(graphics_t graphics);
