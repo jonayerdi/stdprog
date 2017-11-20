@@ -21,18 +21,20 @@
 #ifndef VGA_MODES_H_
 #define VGA_MODES_H_
 
+#include <stdint.h> /* uint32_t */
+
 typedef struct {
 	char label[64]; /* Label describing the resolution */
-	u32 width; /*Width of the active video frame*/
-	u32 height; /*Height of the active video frame*/
-	u32 hps; /*Start time of Horizontal sync pulse, in pixel clocks (active width + H. front porch)*/
-	u32 hpe; /*End time of Horizontal sync pulse, in pixel clocks (active width + H. front porch + H. sync width)*/
-	u32 hmax; /*Total number of pixel clocks per line (active width + H. front porch + H. sync width + H. back porch) */
-	u32 hpol; /*hsync pulse polarity*/
-	u32 vps; /*Start time of Vertical sync pulse, in lines (active height + V. front porch)*/
-	u32 vpe; /*End time of Vertical sync pulse, in lines (active height + V. front porch + V. sync width)*/
-	u32 vmax; /*Total number of lines per frame (active height + V. front porch + V. sync width + V. back porch) */
-	u32 vpol; /*vsync pulse polarity*/
+	uint32_t width; /*Width of the active video frame*/
+	uint32_t height; /*Height of the active video frame*/
+	uint32_t hps; /*Start time of Horizontal sync pulse, in pixel clocks (active width + H. front porch)*/
+	uint32_t hpe; /*End time of Horizontal sync pulse, in pixel clocks (active width + H. front porch + H. sync width)*/
+	uint32_t hmax; /*Total number of pixel clocks per line (active width + H. front porch + H. sync width + H. back porch) */
+	uint32_t hpol; /*hsync pulse polarity*/
+	uint32_t vps; /*Start time of Vertical sync pulse, in lines (active height + V. front porch)*/
+	uint32_t vpe; /*End time of Vertical sync pulse, in lines (active height + V. front porch + V. sync width)*/
+	uint32_t vmax; /*Total number of lines per frame (active height + V. front porch + V. sync width + V. back porch) */
+	uint32_t vpol; /*vsync pulse polarity*/
 	double freq; /*Pixel Clock frequency*/
 } VideoMode;
 

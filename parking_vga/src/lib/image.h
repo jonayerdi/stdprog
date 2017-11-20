@@ -8,6 +8,7 @@
 #ifndef SRC_LIB_IMAGE_H_
 #define SRC_LIB_IMAGE_H_
 
+#include <stddef.h> /* size_t */
 #include <stdint.h> /* uint32_t */
 
 typedef uint32_t pixel_t; /* ARGB format */

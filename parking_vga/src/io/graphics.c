@@ -25,7 +25,7 @@ void graphics_draw_string8x8(graphics_t graphics, char *string, pixel_t color, s
 	size_t string_length = strlen(string);
 
 	/* Get vbuffer */
-	pixel_t vbuffer = graphics.get_vbuffer(graphics.context);
+	pixel_t *vbuffer = graphics.get_vbuffer(graphics.context);
 
 	/* Set pixel color*/
 	for(size_t pixel_y = 0 ; pixel_y < 8 ; pixel_y++)
@@ -42,22 +42,22 @@ void graphics_draw_string8x8(graphics_t graphics, char *string, pixel_t color, s
 				if(pos_y >= graphics.y) /* Check vertical out of bounds */
 					return; /* Everything else is out of bounds */
 				pixel_alpha_compositing(&vbuffer[(pos_y * graphics.x) + pos_x]
-					,(font8x8[string[character]][pixel_y] & (1 << pixel_x)) ? color : PIXEL_INVISIBLE);
+					,(font8x8[(size_t)string[character]][pixel_y] & (1 << pixel_x)) ? color : PIXEL_INVISIBLE);
 			}
 }
 
-void graphics_draw_rect(graphics_t graphics, pixel_t color, size_t x1, size_t x2, size_t y1, size_t y2)
+void graphics_draw_rect(graphics_t graphics, pixel_t color, size_t x1, size_t y1, size_t x2, size_t y2)
 {
 	/* Get vbuffer */
-	pixel_t vbuffer = graphics.get_vbuffer(graphics.context);
+	pixel_t *vbuffer = graphics.get_vbuffer(graphics.context);
 
 	/* Compute bounds */
-	end_x = x2 > graphics.x ? graphics.x : x2;
-	end_y = y2 > graphics.y ? graphics.y : y2;
+	size_t end_x = x2 > graphics.x ? graphics.x : x2;
+	size_t end_y = y2 > graphics.y ? graphics.y : y2;
 
 	/* Set pixel color */
-	for(size_t pixel_y = y ; pixel_y < end_y ; pixel_y++)
-		for(size_t pixel_x = x ; pixel_x < end_x ; pixel_x++)
+	for(size_t pixel_y = y1 ; pixel_y < end_y ; pixel_y++)
+		for(size_t pixel_x = x1 ; pixel_x < end_x ; pixel_x++)
 			pixel_alpha_compositing(&vbuffer[(pixel_y * graphics.x) + (pixel_x)], color);
 }
 
@@ -69,7 +69,7 @@ void graphics_draw_circle(graphics_t graphics, pixel_t color, size_t x, size_t y
 	int radius2 = ((int)radius * (int)radius);
 
 	/* Get vbuffer */
-	pixel_t vbuffer = graphics.get_vbuffer(graphics.context);
+	pixel_t *vbuffer = graphics.get_vbuffer(graphics.context);
 
 	/* Set pixel color */
 	for(int pixel_y = 0 ; pixel_y < (int)diameter ; pixel_y++)
@@ -85,11 +85,11 @@ void graphics_draw_circle(graphics_t graphics, pixel_t color, size_t x, size_t y
 inline void graphics_draw_image(graphics_t graphics, image_t image, size_t x, size_t y)
 {
 	/* Get vbuffer */
-	pixel_t vbuffer = graphics.get_vbuffer(graphics.context);
+	pixel_t *vbuffer = graphics.get_vbuffer(graphics.context);
 
 	/* Compute bounds */
-	end_x = (x + image.x) > graphics.x ? graphics.x - x : image.x;
-	end_y = (y + image.y) > graphics.y ? graphics.y - y : image.y;
+	size_t end_x = (x + image.x) > graphics.x ? graphics.x - x : image.x;
+	size_t end_y = (y + image.y) > graphics.y ? graphics.y - y : image.y;
 
 	/* Set pixel color */
 	for(size_t pixel_y = 0 ; pixel_y < end_x ; pixel_y++)

@@ -7,6 +7,8 @@
 
 #include "lib/image.h"
 
+#include "io/memory.h"
+
 inline void pixel_alpha_compositing(pixel_t *target, pixel_t value)
 {
 	pixel_t oldvalue = *target;
@@ -20,12 +22,13 @@ inline void pixel_alpha_compositing(pixel_t *target, pixel_t value)
 
 inline image_t *image_alloc(size_t x, size_t y)
 {
-	image_t * image = (image_t *)malloc(sizeof(image_t));
-	image->pixels = (pixel_t *)malloc(sizeof(pixel_t) * x * y);
+	image_t * image = (image_t *)memory_allocate(sizeof(image_t));
+	image->pixels = (pixel_t *)memory_allocate(sizeof(pixel_t) * x * y);
+	return image;
 }
 
 inline void image_free(image_t *image)
 {
-	free(image->pixels);
-	free(image);
+	memory_free(image->pixels);
+	memory_free(image);
 }
