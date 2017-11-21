@@ -12,7 +12,7 @@
 inline void pixel_alpha_compositing(pixel_t *target, pixel_t value)
 {
 	pixel_t oldvalue = *target;
-	double alpha = ((double)(value & PIXEL_ALPHA)) / 255.0; /* 0.0 to 1.0 */
+	double alpha = ((double)((value & PIXEL_ALPHA)>>24)) / 255.0; /* 0.0 to 1.0 */
 	double oldalpha = 1 - alpha;
 	char r = (char)((((double)((oldvalue & PIXEL_RED)>>16)) * oldalpha) + (((double)((value & PIXEL_RED)>>16)) * alpha));
 	char g = (char)((((double)((oldvalue & PIXEL_GREEN)>>8)) * oldalpha) + (((double)((value & PIXEL_GREEN)>>8)) * alpha));
