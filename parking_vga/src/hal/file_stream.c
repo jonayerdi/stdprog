@@ -56,6 +56,8 @@ static void _close(void *context)
 int file_input_stream(input_stream_t *stream, const char *filename)
 {
 	FIL *file = (FIL *)memory_allocate(sizeof(FIL));
+	if(file == NULL)
+		return MEMORY_ERROR;
 	FRESULT result;
 	/* Mount filesystem if needed */
 	if(filesystem.fs_type == 0)
@@ -79,6 +81,8 @@ int file_input_stream(input_stream_t *stream, const char *filename)
 int file_output_stream(output_stream_t *stream, const char *filename)
 {
 	FIL *file = (FIL *)memory_allocate(sizeof(FIL));
+	if(file == NULL)
+		return MEMORY_ERROR;
 	FRESULT result;
 	/* Mount filesystem if needed */
 	if(filesystem.fs_type == 0)
