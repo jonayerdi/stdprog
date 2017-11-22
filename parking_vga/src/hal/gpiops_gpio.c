@@ -31,6 +31,12 @@ static void _set(gpio_value_t value, void *context)
 	XGpioPs_WritePin(&gpio->gpio, gpio->pin, (u32)value);
 }
 
+static void _destroy(void *context)
+{
+	gpiops_gpio_t *gpio = (gpiops_gpio_t *)context;
+	memory_free(gpio);
+}
+
 static int gpiops_init(XGpioPs *gpio, gpiops_id_t id, u32 direction)
 {
 	//Variables
@@ -63,6 +69,7 @@ int gpiops_input_init(gpio_input_t *out, gpiops_id_t id)
 	context->gpio = gpio;
 	context->pin = id.pin;
 	out->get = _get;
+	out->destroy = _destroy;
 	out->context = context;
 	return XST_SUCCESS;
 }
@@ -81,6 +88,7 @@ int gpiops_output_init(gpio_output_t *out, gpiops_id_t id)
 	context->gpio = gpio;
 	context->pin = id.pin;
 	out->set = _set;
+	out->destroy = _destroy;
 	out->context = context;
 	return XST_SUCCESS;
 }
