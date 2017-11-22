@@ -70,9 +70,7 @@ void vgaTest(void)
 	/* Declare variables */
 	int error;
 	graphics_t gfx;
-	vga_graphics_config_t config = VGA_GRAPHICS_HDMI_CONFIG(VMODE_800x600);
-	size_t redX = 300, redY = 250, yellowX = 0, yellowY = 0;
-	char redXIncr = 1, redYIncr = 2, yellowXIncr = 2, yellowYIncr = 1;
+	vga_graphics_config_t config = VGA_GRAPHICS_VGA_CONFIG(VMODE_800x600);//VGA_GRAPHICS_HDMI_CONFIG(VMODE_800x600);
 
 	/* VGA test */
 	stream_write_string(logger, "[calling] vga_graphics_init()\n");
@@ -82,17 +80,15 @@ void vgaTest(void)
 	else
 	{
 		stream_write_string(logger, "[done] vga_graphics_init()\n");
+		graphics_draw_rect(gfx, BLACK, 0, 0, 800, 600);
+		graphics_draw_rect(gfx, GREEN, 500, 100, 700, 400);
+		graphics_draw_circle(gfx, RED, 300, 250, 150);
+		graphics_draw_circle(gfx, YELLOW, 0, 0, 200);
+		graphics_draw_string8x8(gfx, "Texto", BLUE, 200, 200);
+		graphics_draw_string8x8(gfx, "de", WHITE, 248, 200);
+		graphics_draw_string8x8(gfx, "prueba", BLACK, 272, 200);
 		while(1)
-		{
-			graphics_draw_rect(gfx, BLACK, 0, 0, 800, 600);
-			graphics_draw_rect(gfx, GREEN, 500, 100, 700, 400);
-			graphics_draw_circle(gfx, RED, redX, redY, 150);
-			graphics_draw_circle(gfx, YELLOW, yellowX, yellowY, 200);
-			graphics_draw_string8x8(gfx, "Texto", BLUE, 200, 200);
-			graphics_draw_string8x8(gfx, "de", WHITE, 248, 200);
-			graphics_draw_string8x8(gfx, "prueba", BLACK, 272, 200);
 			graphics_render(gfx);
-		}
 		graphics_destroy(gfx);
 	}
 }
