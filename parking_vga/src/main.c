@@ -15,6 +15,8 @@
 #include "hal/gpiops_gpio.h"
 #include "hal/vga_graphics.h"
 
+#include "lib/bmp.h"
+
 #define FILE_BUFFER_SIZE 512
 
 #define BLACK 0xFF000000
@@ -77,11 +79,30 @@ void vga_gpio_test(void)
 	int error;
 	gpio_input_t button;
 	graphics_t gfx;
-	vga_graphics_config_t config = VGA_GRAPHICS_VGA_CONFIG(VMODE_800x600);//VGA_GRAPHICS_HDMI_CONFIG(VMODE_800x600);
+	vga_graphics_config_t config = VGA_GRAPHICS_HDMI_CONFIG(VMODE_800x600);//VGA_GRAPHICS_VGA_CONFIG(VMODE_800x600);//VGA_GRAPHICS_HDMI_CONFIG(VMODE_800x600);
+	input_stream_t imageFile;
+	image_t image;
 
 	/* Init GPIO */
 	gpiops_id_t gpio_id = GPIOPS_BUTTON5;
 	gpiops_input_init(&button, gpio_id);
+
+	/* Read image */
+	stream_write_string(logger, "[start] Opening image file\n");
+	error = file_input_stream(&imageFile, "donald.bmp");
+	if(error)
+	{
+		stream_write_string(logger, "[error] Opening image file\n");
+		return;
+	}
+	stream_write_string(logger, "[start] Parsing image file\n");
+	error = bmp_load(imageFile, &image);
+	if(error)
+	{
+		stream_write_string(logger, "[error] Parsing image file\n");
+		return;
+	}
+	stream_write_string(logger, "[done] Parse image file\n");
 
 	/* VGA test */
 	stream_write_string(logger, "[start] Initializing VGA\n");
@@ -98,6 +119,7 @@ void vga_gpio_test(void)
 		graphics_draw_string8x8(gfx, "Texto", BLUE, 200, 200);
 		graphics_draw_string8x8(gfx, "de", WHITE, 248, 200);
 		graphics_draw_string8x8(gfx, "prueba", BLACK, 272, 200);
+		graphics_draw_image(gfx, image, 100, 100);
 		stream_write_string(logger, "[start] Rendering stuff...Press button5 to terminate\n");
 		while(gpio_get(button) == 0)
 			graphics_render(gfx);

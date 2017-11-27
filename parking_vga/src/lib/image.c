@@ -23,6 +23,9 @@ inline void pixel_alpha_compositing(pixel_t *target, pixel_t value)
 inline image_t *image_alloc(size_t x, size_t y)
 {
 	image_t * image = (image_t *)memory_allocate(sizeof(image_t));
+	image->x = x;
+	image->y = y;
+	image->stride = x;
 	image->pixels = (pixel_t *)memory_allocate(sizeof(pixel_t) * x * y);
 	return image;
 }

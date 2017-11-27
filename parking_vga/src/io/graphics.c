@@ -92,9 +92,9 @@ inline void graphics_draw_image(graphics_t graphics, image_t image, size_t x, si
 	size_t end_y = (y + image.y) > graphics.y ? graphics.y - y : image.y;
 
 	/* Set pixel color */
-	for(size_t pixel_y = 0 ; pixel_y < end_x ; pixel_y++)
-		for(size_t pixel_x = 0 ; pixel_x < end_y ; pixel_x++)
-			vbuffer[((y + pixel_y) * graphics.x) + (x + pixel_x)] = image.pixels[((pixel_y) * image.x) + (pixel_x)];
+	for(size_t pixel_y = 0 ; pixel_y < end_y ; pixel_y++)
+		for(size_t pixel_x = 0 ; pixel_x < end_x ; pixel_x++)
+			vbuffer[((y + pixel_y) * graphics.x) + (x + pixel_x)] = image.pixels[((pixel_y) * image.stride) + (pixel_x)];
 }
 
 inline void graphics_render(graphics_t graphics)

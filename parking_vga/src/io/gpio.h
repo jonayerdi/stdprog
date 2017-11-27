@@ -15,13 +15,13 @@
 /*--------------------------------------------------------------------*/
 
 /* External dependencies */
-#include <xil_types.h>
+#include <stdint.h> /* uint32_t */
 
 /*--------------------------------------------------------------------*/
 /*                               TYPES                                */
 /*--------------------------------------------------------------------*/
 
-typedef u32 gpio_value_t;
+typedef uint32_t gpio_value_t;
 
 typedef struct gpio_input
 {

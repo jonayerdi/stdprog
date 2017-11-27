@@ -8,7 +8,7 @@
 #ifndef SRC_IO_GRAPHICS_H_
 #define SRC_IO_GRAPHICS_H_
 
-#include <stddef.h> /* NULL */
+#include <stddef.h> /* size_t */
 
 #include "lib/image.h"
 

@@ -23,6 +23,7 @@ typedef struct image
 {
 	size_t x;
 	size_t y;
+	size_t stride;
 	pixel_t *pixels;
 } image_t;
 
