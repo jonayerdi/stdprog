@@ -20,18 +20,18 @@ inline void pixel_alpha_compositing(pixel_t *target, pixel_t value)
 	*target = (((pixel_t)r<<16) + ((pixel_t)g<<8) + ((pixel_t)b));
 }
 
-inline image_t *image_alloc(size_t x, size_t y)
+inline int image_alloc(image_t *image, size_t x, size_t y)
 {
-	image_t * image = (image_t *)memory_allocate(sizeof(image_t));
 	image->x = x;
 	image->y = y;
 	image->stride = x;
 	image->pixels = (pixel_t *)memory_allocate(sizeof(pixel_t) * x * y);
-	return image;
+	if(image->pixels == NULL)
+		return MEMORY_ERROR;
+	return 0;
 }
 
 inline void image_free(image_t *image)
 {
 	memory_free(image->pixels);
-	memory_free(image);
 }

@@ -10,9 +10,13 @@
 
 #include <stddef.h> /* size_t */
 
+#include "io/graphics.h" /* graphics_t */
+#include "io/gpio.h" /* gpio_input_t */
 #include "lib/clock.h" /* clock_t */
 #include "lib/image.h" /* image_t */
-#include "io/graphics.h" /* graphics_t */
+
+#define GPIO_VALUE_FREE ((gpio_value_t)0)
+#define GPIO_VALUE_TAKEN ((gpio_value_t)1)
 
 typedef enum parking_state
 {
@@ -32,24 +36,28 @@ typedef enum parking_state_mode
 typedef struct parking_spot
 {
 	unsigned int id;
-	parking_state state;
+	parking_state_t state;
 	parking_state_mode_t state_mode;
-	clock_t timestamp;
-	size_t x;
-	size_t y;
+	timestamp_t timestamp;
+	gpio_input_t input_source;
+	size_t x1;
+	size_t x2;
+	size_t y1;
+	size_t y2;
 } parking_spot_t;
 
 typedef struct parking
 {
 	parking_spot_t *spots;
 	size_t count;
+	timestamp_t time;
 	graphics_t graphics;
-	image_t background;
+	image_t background_image;
 } parking_t;
 
-int parking_init(char *config, parking_t *output);
-int parking_maintain(parking_t input);
-int parking_render(parking_t input);
-int parking_destroy(parking_t *input);
+int parking_init(parking_t *output);
+int parking_step(parking_t input, timestamp_t time_diff);
+void parking_render(parking_t input);
+void parking_destroy(parking_t *input);
 
 #endif /* SRC_DOMAIN_PARKING_H_ */

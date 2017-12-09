@@ -8,7 +8,7 @@
 #ifndef SRC_LIB_IMAGE_H_
 #define SRC_LIB_IMAGE_H_
 
-#include <stddef.h> /* size_t */
+#include <stddef.h> /* size_t, NULL */
 #include <stdint.h> /* uint32_t */
 
 typedef uint32_t pixel_t; /* ARGB format */
@@ -29,7 +29,7 @@ typedef struct image
 
 void pixel_alpha_compositing(pixel_t *target, pixel_t value);
 
-image_t *image_alloc(size_t x, size_t y);
+int image_alloc(image_t *image, size_t x, size_t y);
 void image_free(image_t *image);
 
 #endif /* SRC_LIB_IMAGE_H_ */

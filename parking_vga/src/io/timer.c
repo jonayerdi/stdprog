@@ -7,34 +7,34 @@
 
 #include "io/timer.h"
 
-static void _timer_callback(timer_t timer);
+static void _timer_handler(ttimer_t timer);
 
-static void _timer_callback(timer_t timer)
+static void _timer_handler(ttimer_t timer)
 {
+	timer.ticks++;
 	if(timer.callback)
 		timer.callback(timer);
-	timer.ticks++;
 }
 
-inline int timer_start(timer_t timer, timer_tick_t period_msecs, void(*callback)(timer_t timer))
+inline int timer_start(ttimer_t timer, timer_tick_t period_msecs, void(*callback)(ttimer_t timer))
 {
 	timer.callback = callback;
 	timer.period_msecs = period_msecs;
 	timer.ticks = 0;
-	return timer.start(msecs, _timer_callback, timer.context);
+	return timer.start(period_msecs, _timer_handler, timer.context);
 }
 
-inline int timer_stop(timer_t timer)
+inline void timer_stop(ttimer_t timer)
 {
-	return timer.stop(timer.context);
+	timer.stop(timer.context);
 }
 
-inline timer_tick_t timer_get_ticks(timer_t timer)
+inline timer_tick_t timer_get_ticks(ttimer_t timer)
 {
 	return timer.ticks;
 }
 
-inline void timer_destroy(timer_t timer)
+inline void timer_destroy(ttimer_t timer)
 {
 	timer.destroy(timer.context);
 }

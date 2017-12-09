@@ -43,10 +43,7 @@ int bmp_load(input_stream_t input, image_t *output)
 	if(state != BMP_STATE_OK)
 		return state;
 	//Set image parameters and allocate pixel buffer
-	output->x = header.info_header.image_width;
-	output->y = header.info_header.image_height;
-	output->stride = header.info_header.image_width;
-	output->pixels = (pixel_t *)memory_allocate(sizeof(pixel_t) * header.info_header.image_width * header.info_header.image_height);
+	image_alloc(output, header.info_header.image_width, header.info_header.image_height);
 	//Read pixel buffer
 	for(size_t y = 0 ; y < output->y ; y++)
 	{
