@@ -21,13 +21,15 @@ static void _timer_callback(ttimer_t _timer);
 
 static void _timer_callback(ttimer_t _timer)
 {
-	parking_step(parking, _timer.period_msecs);
+	parking_step(&parking, _timer.period_msecs);
 	if(!(timer_get_ticks(_timer) % (100 / _timer.period_msecs)))
 		parking_render(parking);
 }
 
 int main(void)
 {
+	int result;
+
 	/* Init logger */
 	logger_init();
 
@@ -35,14 +37,30 @@ int main(void)
 	LOG("[start] Starting application\n");
 
 	/* Init parking */
-	parking_init(&parking);
+	result = parking_init(&parking);
+	if(result != 0)
+	{
+		LOG("[error] Parking init");
+		return 0;
+	}
 
 	/* Init timer */
-	scu_timer_init(&timer);
+	result = scu_timer_init(&timer);
+	if(result != 0)
+	{
+		LOG("[error] SCU Timer init");
+		return 0;
+	}
 
 	/* Start timer */
-	timer_start(timer, TIMER_PERIOD, _timer_callback);
+	result = timer_start(&timer, TIMER_PERIOD, _timer_callback);
+	if(result != 0)
+	{
+		LOG("[error] Starting timer");
+		return 0;
+	}
 
 	/* Demo started */
 	LOG("[done] Starting application\n");
+	for(;;);
 }

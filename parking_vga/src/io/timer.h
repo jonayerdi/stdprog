@@ -14,7 +14,7 @@ typedef uint64_t timer_tick_t;
 
 typedef struct ttimer
 {
-	int(*start)(timer_tick_t period_msecs, void(*callback)(struct ttimer ttimer), void *context);
+	int(*start)(timer_tick_t period_msecs, void(*callback)(struct ttimer *ttimer), void *context);
 	void(*stop)(void *context);
 	void(*destroy)(void *context);
 	void(*callback)(struct ttimer ttimer);
@@ -23,7 +23,7 @@ typedef struct ttimer
 	void *context;
 } ttimer_t;
 
-int timer_start(ttimer_t timer, timer_tick_t period_msecs, void(*callback)(ttimer_t timer));
+int timer_start(ttimer_t *timer, timer_tick_t period_msecs, void(*callback)(ttimer_t timer));
 void timer_stop(ttimer_t timer);
 
 timer_tick_t timer_get_ticks(ttimer_t timer);

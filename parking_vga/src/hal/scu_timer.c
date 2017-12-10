@@ -12,12 +12,12 @@
 #include <xscugic.h>
 #include <stdint.h>
 
-static int _start(timer_tick_t period_msecs, void(*timer_handler)(ttimer_t timer), void *context);
+static int _start(timer_tick_t period_msecs, void(*timer_handler)(ttimer_t *timer), void *context);
 static void _stop(void *context);
 static void _destroy(void *context);
 static void _scu_timer_handler(scu_timer_t *timer);
 
-static int _start(timer_tick_t period_msecs, void(*timer_handler)(ttimer_t timer), void *context)
+static int _start(timer_tick_t period_msecs, void(*timer_handler)(ttimer_t *timer), void *context)
 {
 	scu_timer_t *scu_timer = (scu_timer_t *)context;
 	scu_timer->timer_handler = timer_handler;
@@ -31,7 +31,18 @@ static int _start(timer_tick_t period_msecs, void(*timer_handler)(ttimer_t timer
 	timer_config = XScuTimer_LookupConfig(XPAR_SCUTIMER_DEVICE_ID);
 	status = XScuTimer_CfgInitialize(timer, timer_config, timer_config->BaseAddr);
 	if(status != XST_SUCCESS)
-		return status;
+	{
+		//Stop the timer if needed
+		if(status == XST_DEVICE_IS_STARTED)
+		{
+			_stop(scu_timer);
+			status = XScuTimer_CfgInitialize(timer, timer_config, timer_config->BaseAddr);
+			if(status != XST_SUCCESS)
+				return status;
+		}
+		else
+			return status;
+	}
 	status = XScuTimer_SelfTest(timer);
 	if(status != XST_SUCCESS)
 		return status;
@@ -74,7 +85,7 @@ static void _destroy(void *context)
 
 static void _scu_timer_handler(scu_timer_t *scu_timer)
 {
-	scu_timer->timer_handler(*(scu_timer->timer));
+	scu_timer->timer_handler(scu_timer->timer);
 	XScuTimer_ClearInterruptStatus(&scu_timer->driver);
 }
 

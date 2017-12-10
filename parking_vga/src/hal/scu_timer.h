@@ -16,7 +16,7 @@ typedef struct scu_timer
 {
 	XScuTimer driver;
 	ttimer_t *timer;
-	void (*timer_handler)(ttimer_t timer);
+	void (*timer_handler)(ttimer_t *timer);
 } scu_timer_t;
 
 int scu_timer_init(ttimer_t *output);

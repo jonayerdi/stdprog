@@ -50,7 +50,7 @@ int bmp_load(input_stream_t input, image_t *output)
 		//Read row pixel bytes
 		for(size_t x = 0 ; x < output->x ; x++)
 		{
-			read = stream_read(input, (char *)&output->pixels[((output->y - y - 1) * output->x) + (output->x - x - 1)], header.info_header.bits_per_pixel / 8);
+			read = stream_read(input, (char *)&output->pixels[((output->y - y - 1) * output->x) + (x)], header.info_header.bits_per_pixel / 8);
 			if(read != (header.info_header.bits_per_pixel / 8))
 				return BMP_STATE_ERROR_STREAM;
 		}

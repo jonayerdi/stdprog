@@ -56,7 +56,7 @@ typedef struct parking
 } parking_t;
 
 int parking_init(parking_t *output);
-int parking_step(parking_t input, timestamp_t time_diff);
+int parking_step(parking_t *input, timestamp_t time_diff);
 void parking_render(parking_t input);
 void parking_destroy(parking_t *input);
 

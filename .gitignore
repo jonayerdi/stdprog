@@ -3,6 +3,7 @@ Makefile
 !.gitignore
 !*/src/**/*.h
 !*/src/**/*.c
+!*/README.txt
 platform_config.h
 platform.h
 platform.c
