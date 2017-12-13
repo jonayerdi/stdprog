@@ -14,29 +14,11 @@
 #include <xgpiops.h>
 #include <xparameters.h>
 
-#define GPIOPS_BUTTON4 \
-{ \
-	.device_id = XPAR_PS7_GPIO_0_DEVICE_ID, \
-	.pin = 50 \
-}
-
-#define GPIOPS_BUTTON5 \
-{ \
-	.device_id = XPAR_PS7_GPIO_0_DEVICE_ID, \
-	.pin = 51 \
-}
-
-#define GPIOPS_LED4 \
-{ \
-	.device_id = XPAR_PS7_GPIO_0_DEVICE_ID, \
-	.pin = 7 \
-}
-
 typedef struct gpiops_id
 {
 	u16 device_id;
 	u32 pin;
-}gpiops_id_t;
+} gpiops_id_t;
 
 typedef struct gpiops_gpio
 {

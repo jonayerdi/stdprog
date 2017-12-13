@@ -16,7 +16,7 @@
 #include "lib/bmp.h"
 
 #include "hal/file_stream.h"
-#include "hal/gpiops_gpio.h"
+#include "hal/gpio_list.h"
 #include "hal/vga_graphics.h"
 
 #define COLOR_PARKING_STATE_UNKNOWN 0xCCAAAAAA
@@ -131,14 +131,12 @@ int parking_init(parking_t *output)
 		output->spots[i].state_mode = parking_state_mode_normal;
 		CLOCK_SET(output->spots[i].timestamp, 0, 0, 0, 0);
 	}
-	gpiops_id_t gpio0 = GPIOPS_BUTTON4;
-	result = gpiops_input_init(&output->spots[0].input_source, gpio0);
+	result = gpiops_input_init(&output->spots[0].input_source, gpiops_button4);
 	output->spots[0].x1 = 34;
 	output->spots[0].x2 = 147;
 	output->spots[0].y1 = 45;
 	output->spots[0].y2 = 184;
-	gpiops_id_t gpio1 = GPIOPS_BUTTON5;
-	result = gpiops_input_init(&output->spots[1].input_source, gpio1);
+	result = gpiops_input_init(&output->spots[1].input_source, gpiops_button5);
 	output->spots[1].x1 = 194;
 	output->spots[1].x2 = 298;
 	output->spots[1].y1 = 45;
