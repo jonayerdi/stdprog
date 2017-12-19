@@ -7,6 +7,7 @@
 
 #include "config/graphics_config.h"
 
+#include "hal/vga_graphics.h"
 #include "hal/vga/vga_modes.h"
 
 /* VGA or HDMI */

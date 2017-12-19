@@ -8,7 +8,7 @@
 #ifndef SRC_CONFIG_GRAPHICS_CONFIG_H_
 #define SRC_CONFIG_GRAPHICS_CONFIG_H_
 
-#include "hal/vga_graphics.h"
+#include "io/graphics.h"
 
 #define GRAPHICS_CONFIG_DEVICE_NOT_FOUND -70
 #define GRAPHICS_CONFIG_MODE_NOT_FOUND -71

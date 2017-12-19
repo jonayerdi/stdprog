@@ -8,8 +8,7 @@
 #ifndef SRC_CONFIG_GPIO_CONFIG_H_
 #define SRC_CONFIG_GPIO_CONFIG_H_
 
-#include "hal/gpiops_gpio.h"
-#include "hal/axi_gpio.h"
+#include "io/gpio.h"
 
 #define GPIO_CONFIG_NOT_FOUND -69
 

@@ -7,6 +7,9 @@
 
 #include "config/gpio_config.h"
 
+#include "hal/gpiops_gpio.h"
+#include "hal/axi_gpio.h"
+
 #include <string.h>
 
 /* MIO */

@@ -17,8 +17,7 @@
 
 #include "config/gpio_config.h"
 #include "config/graphics_config.h"
-
-#include "hal/file_stream.h"
+#include "config/stream_config.h"
 
 #define COLOR_PARKING_STATE_UNKNOWN 0xCCAAAAAA
 #define COLOR_PARKING_STATE_FREE 0xCC00DD11
@@ -148,7 +147,7 @@ int parking_init(parking_t *output)
 	result = graphics_config_get(&output->graphics, "hdmi", "800x600");
 	//Background image
 	input_stream_t image_input;
-	result = file_input_stream(&image_input, "parking.bmp");
+	result = stream_config_get_input(&image_input, "parking.bmp");
 	result = bmp_load(image_input, &output->background_image);
 	return 0;
 }
