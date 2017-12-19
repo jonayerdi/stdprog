@@ -132,12 +132,12 @@ int parking_init(parking_t *output)
 		output->spots[i].state_mode = parking_state_mode_normal;
 		CLOCK_SET(output->spots[i].timestamp, 0, 0, 0, 0);
 	}
-	result = gpiops_input_init(&output->spots[0].input_source, gpiops_button4);
+	result = gpio_config_get_input(&output->spots[0].input_source, "button4");
 	output->spots[0].x1 = 34;
 	output->spots[0].x2 = 147;
 	output->spots[0].y1 = 45;
 	output->spots[0].y2 = 184;
-	result = gpiops_input_init(&output->spots[1].input_source, gpiops_button5);
+	result = gpio_config_get_input(&output->spots[1].input_source, "button5");
 	output->spots[1].x1 = 194;
 	output->spots[1].x2 = 298;
 	output->spots[1].y1 = 45;
@@ -145,8 +145,7 @@ int parking_init(parking_t *output)
 	//Time
 	CLOCK_SET(output->time, 0, 0, 0, 0);
 	//Graphics
-	vga_graphics_config_t vga_config = VGA_GRAPHICS_HDMI_CONFIG(VMODE_800x600);
-	result = vga_graphics_init(&output->graphics, vga_config);
+	result = graphics_config_get(&output->graphics, "hdmi", "800x600");
 	//Background image
 	input_stream_t image_input;
 	result = file_input_stream(&image_input, "parking.bmp");
