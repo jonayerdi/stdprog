@@ -15,31 +15,6 @@
 
 #include "io/graphics.h"
 
-#define VGA_GRAPHICS_DISPLAY_NOT_HDMI DISPLAY_NOT_HDMI
-#define VGA_GRAPHICS_DISPLAY_HDMI DISPLAY_HDMI
-
-#define VGA_GRAPHICS_VDMA_0_ID XPAR_AXIVDMA_0_DEVICE_ID
-#define VGA_GRAPHICS_VDMA_1_ID XPAR_AXIVDMA_1_DEVICE_ID
-
-#define VGA_GRAPHICS_DISPCTRL_0_BASEADDR XPAR_AXI_DISPCTRL_0_S_AXI_BASEADDR
-#define VGA_GRAPHICS_DISPCTRL_1_BASEADDR XPAR_AXI_DISPCTRL_1_S_AXI_BASEADDR
-
-#define VGA_GRAPHICS_VGA_CONFIG(MODE) \
-{ \
-	.mode = MODE, \
-	.hdmi = VGA_GRAPHICS_DISPLAY_NOT_HDMI, \
-	.vdma_id = VGA_GRAPHICS_VDMA_0_ID, \
-	.display_ctrl_address = VGA_GRAPHICS_DISPCTRL_0_BASEADDR \
-}
-
-#define VGA_GRAPHICS_HDMI_CONFIG(MODE) \
-{ \
-	.mode = MODE, \
-	.hdmi = VGA_GRAPHICS_DISPLAY_HDMI, \
-	.vdma_id = VGA_GRAPHICS_VDMA_1_ID, \
-	.display_ctrl_address = VGA_GRAPHICS_DISPCTRL_1_BASEADDR \
-}
-
 typedef struct vga_graphics_config
 {
 	VideoMode mode;
@@ -57,6 +32,6 @@ typedef struct vga_graphics
 	char current_frame;
 } vga_graphics_t;
 
-int vga_graphics_init(vga_graphics_config_t config, graphics_t *output);
+int vga_graphics_init(graphics_t *output, vga_graphics_config_t config);
 
 #endif /* SRC_HAL_VGA_GRAPHICS_H_ */

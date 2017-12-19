@@ -5,10 +5,8 @@
  *      Author: Jon Ayerdi
  */
 
-#include "io/logger.h"
-#include "io/timer.h"
-
-#include "hal/scu_timer.h"
+#include "config/logger.h"
+#include "config/timer_config.h"
 
 #include "domain/parking.h"
 
@@ -45,7 +43,7 @@ int main(void)
 	}
 
 	/* Init timer */
-	result = scu_timer_init(&timer);
+	result = timer_config_get_default(&timer);
 	if(result != 0)
 	{
 		LOG("[error] SCU Timer init");

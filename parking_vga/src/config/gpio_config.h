@@ -1,15 +1,17 @@
 /*
- * gpio_list.h
+ * gpio_config.h
  *
- *  Created on: 13 Dec 2017
+ *  Created on: 19 Dec 2017
  *      Author: Jon Ayerdi
  */
 
-#ifndef SRC_HAL_GPIO_LIST_H_
-#define SRC_HAL_GPIO_LIST_H_
+#ifndef SRC_CONFIG_GPIO_CONFIG_H_
+#define SRC_CONFIG_GPIO_CONFIG_H_
 
-#include "gpiops_gpio.h"
-#include "axi_gpio.h"
+#include "hal/gpiops_gpio.h"
+#include "hal/axi_gpio.h"
+
+#define GPIO_CONFIG_NOT_FOUND -69
 
 /* MIO */
 /* Buttons */
@@ -35,7 +37,7 @@ const axi_gpio_id_t axi_gpio_led1 = { .device_id = XPAR_LEDS_4BITS_DEVICE_ID, .c
 const axi_gpio_id_t axi_gpio_led2 = { .device_id = XPAR_LEDS_4BITS_DEVICE_ID, .channel = 1, .pin = 2 };
 const axi_gpio_id_t axi_gpio_led3 = { .device_id = XPAR_LEDS_4BITS_DEVICE_ID, .channel = 1, .pin = 3 };
 
-int gpio_list_get_input(gpio_input_t *out, const char *name);
-int gpio_list_get_output(gpio_output_t *out, const char *name);
+int gpio_config_get_input(gpio_input_t *out, const char *gpio_name);
+int gpio_config_get_output(gpio_output_t *out, const char *gpio_name);
 
-#endif /* SRC_HAL_GPIO_LIST_H_ */
+#endif /* SRC_CONFIG_GPIO_CONFIG_H_ */

@@ -15,9 +15,10 @@
 #include "lib/image.h"
 #include "lib/bmp.h"
 
+#include "config/gpio_config.h"
+#include "config/graphics_config.h"
+
 #include "hal/file_stream.h"
-#include "hal/gpio_list.h"
-#include "hal/vga_graphics.h"
 
 #define COLOR_PARKING_STATE_UNKNOWN 0xCCAAAAAA
 #define COLOR_PARKING_STATE_FREE 0xCC00DD11
@@ -145,7 +146,7 @@ int parking_init(parking_t *output)
 	CLOCK_SET(output->time, 0, 0, 0, 0);
 	//Graphics
 	vga_graphics_config_t vga_config = VGA_GRAPHICS_HDMI_CONFIG(VMODE_800x600);
-	result = vga_graphics_init(vga_config, &output->graphics);
+	result = vga_graphics_init(&output->graphics, vga_config);
 	//Background image
 	input_stream_t image_input;
 	result = file_input_stream(&image_input, "parking.bmp");

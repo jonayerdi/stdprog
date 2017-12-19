@@ -5,7 +5,7 @@
  *      Author: Jon Ayerdi
  */
 
-#include "io/logger.h"
+#include "config/logger.h"
 
 #include "hal/stdio_stream.h"
 

@@ -36,7 +36,7 @@ static void _destroy(void *context)
 	memory_free(vga);
 }
 
-int vga_graphics_init(vga_graphics_config_t config, graphics_t *output)
+int vga_graphics_init(graphics_t *output, vga_graphics_config_t config)
 {
 	/* Initialize vga_graphics_t struct */
 	vga_graphics_t *context = (vga_graphics_t *)memory_allocate(sizeof(vga_graphics_t));

@@ -12,7 +12,7 @@
 #define MEMORY_SIZE ((size_t)0x10000000ul)
 
 static char _memory[MEMORY_SIZE];
-size_t _current = 0;
+static size_t _current = 0;
 
 inline void *memory_allocate(size_t size)
 {
