@@ -21,11 +21,9 @@ Implementado actualmente:
 	-Visualizacion del parking con estados de las plazas
 
 Falta implementar:
-	-Configuracion con axi/gpiops
+	-Parsear configuracion JSON
 	-Integrar la libreria de maquinas de estado para las plazas
 	-Simular estados forzados con switches
-    -Parsear configuracion (imagen de fondo, posiciones plazas... en fichero json)
-		-Ahora mismo estos datos estan metidos a mano en la funcion parking_init
 	
 Estructura de carpetas:
 	-config: obtencion de implementaciones para interfaces genéricas

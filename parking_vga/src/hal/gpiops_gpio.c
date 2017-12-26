@@ -16,6 +16,7 @@
 
 static gpio_value_t _get(void *context);
 static void _set(gpio_value_t value, void *context);
+static void _destroy(void *context);
 
 static int gpiops_init(XGpioPs *gpio, gpiops_id_t id, u32 direction);
 

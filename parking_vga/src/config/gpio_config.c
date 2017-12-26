@@ -7,6 +7,7 @@
 
 #include "config/gpio_config.h"
 
+#include "hal/fixed_gpio.h"
 #include "hal/gpiops_gpio.h"
 #include "hal/axi_gpio.h"
 
@@ -41,6 +42,9 @@ const axi_gpio_id_t axi_gpio_led3 = { .device_id = XPAR_LEDS_4BITS_DEVICE_ID, .c
 
 int gpio_config_get_input(gpio_input_t *out, const char *gpio_name)
 {
+	//Fixed
+	GPIO_CONFIG_MAP("fixed0", fixed_gpio_input_init(out, 0));
+	GPIO_CONFIG_MAP("fixed1", fixed_gpio_input_init(out, 1));
 	//Buttons
 	GPIO_CONFIG_MAP("button0", axi_gpio_input_init(out, axi_gpio_button0));
 	GPIO_CONFIG_MAP("button1", axi_gpio_input_init(out, axi_gpio_button1));
