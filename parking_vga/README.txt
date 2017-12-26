@@ -21,13 +21,14 @@ Implementado actualmente:
 	-Visualizacion del parking con estados de las plazas
 
 Falta implementar:
+	-Configuracion con axi/gpiops
+	-Integrar la libreria de maquinas de estado para las plazas
+	-Simular estados forzados con switches
     -Parsear configuracion (imagen de fondo, posiciones plazas... en fichero json)
 		-Ahora mismo estos datos estan metidos a mano en la funcion parking_init
-	-Integrar la libreria de maquinas de estado para las plazas
-	-Implementar hal/axi_gpio para acceder a los switches y botones de la FPGA
-	-Simular estados forzados con switches
 	
 Estructura de carpetas:
+	-config: obtencion de implementaciones para interfaces genéricas
     -domain: solucion del problema especifico (parking)
     -hal: implementaciones para la ZYBO 7000 de interfaces en io
     -io: interfaces abstractas portables

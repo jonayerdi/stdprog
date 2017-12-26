@@ -16,12 +16,13 @@ static void _timer_handler(ttimer_t *timer)
 		timer->callback(*timer);
 }
 
-inline int timer_start(ttimer_t *timer, timer_tick_t period_msecs, void(*callback)(ttimer_t timer))
+inline int timer_start(ttimer_t *timer, uint32_t freq, void(*callback)(ttimer_t timer))
 {
 	timer->callback = callback;
-	timer->period_msecs = period_msecs;
+	timer->freq = freq;
+	timer->period = (1000 / freq) + 1;
 	timer->ticks = 0;
-	return timer->start(period_msecs, _timer_handler, timer->context);
+	return timer->start(freq, _timer_handler, timer->context);
 }
 
 inline void timer_stop(ttimer_t timer)

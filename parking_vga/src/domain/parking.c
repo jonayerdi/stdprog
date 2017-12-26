@@ -19,6 +19,9 @@
 #include "config/graphics_config.h"
 #include "config/stream_config.h"
 
+#define TIMEOUT_TAKE_SPOT 4
+#define TIMEOUT_FREE_SPOT 4
+
 #define COLOR_PARKING_STATE_UNKNOWN 0xCCAAAAAA
 #define COLOR_PARKING_STATE_FREE 0xCC00DD11
 #define COLOR_PARKING_STATE_FREEING 0xCCBB00BB
@@ -56,7 +59,7 @@ static int _parking_spot_step(parking_spot_t *input, timestamp_t time)
 					input->state = parking_state_taken;
 					input->timestamp = time;
 				}
-				else if(CLOCK_DIFF_SECONDS(input->timestamp, time) > 5)
+				else if(CLOCK_DIFF_SECONDS(input->timestamp, time) > TIMEOUT_FREE_SPOT)
 				{
 					input->state = parking_state_free;
 					input->timestamp = time;
@@ -75,7 +78,7 @@ static int _parking_spot_step(parking_spot_t *input, timestamp_t time)
 					input->state = parking_state_free;
 					input->timestamp = time;
 				}
-				else if(CLOCK_DIFF_SECONDS(input->timestamp, time) > 5)
+				else if(CLOCK_DIFF_SECONDS(input->timestamp, time) > TIMEOUT_TAKE_SPOT)
 				{
 					input->state = parking_state_taken;
 					input->timestamp = time;
@@ -131,12 +134,12 @@ int parking_init(parking_t *output)
 		output->spots[i].state_mode = parking_state_mode_normal;
 		CLOCK_SET(output->spots[i].timestamp, 0, 0, 0, 0);
 	}
-	result = gpio_config_get_input(&output->spots[0].input_source, "button4");
+	result = gpio_config_get_input(&output->spots[0].input_source, "switch0");
 	output->spots[0].x1 = 34;
 	output->spots[0].x2 = 147;
 	output->spots[0].y1 = 45;
 	output->spots[0].y2 = 184;
-	result = gpio_config_get_input(&output->spots[1].input_source, "button5");
+	result = gpio_config_get_input(&output->spots[1].input_source, "switch1");
 	output->spots[1].x1 = 194;
 	output->spots[1].x2 = 298;
 	output->spots[1].y1 = 45;

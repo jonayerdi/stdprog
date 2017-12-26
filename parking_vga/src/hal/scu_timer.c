@@ -12,12 +12,12 @@
 #include <xscugic.h>
 #include <stdint.h>
 
-static int _start(timer_tick_t period_msecs, void(*timer_handler)(ttimer_t *timer), void *context);
+static int _start(uint32_t freq, void(*timer_handler)(ttimer_t *timer), void *context);
 static void _stop(void *context);
 static void _destroy(void *context);
 static void _scu_timer_handler(scu_timer_t *timer);
 
-static int _start(timer_tick_t period_msecs, void(*timer_handler)(ttimer_t *timer), void *context)
+static int _start(uint32_t freq, void(*timer_handler)(ttimer_t *timer), void *context)
 {
 	scu_timer_t *scu_timer = (scu_timer_t *)context;
 	scu_timer->timer_handler = timer_handler;
@@ -26,7 +26,6 @@ static int _start(timer_tick_t period_msecs, void(*timer_handler)(ttimer_t *time
 	XScuTimer_Config *timer_config;
 	s32 status;
 	u32 load_value;
-	u32 step = 1000/period_msecs;
 	//Configure timer
 	timer_config = XScuTimer_LookupConfig(XPAR_SCUTIMER_DEVICE_ID);
 	status = XScuTimer_CfgInitialize(timer, timer_config, timer_config->BaseAddr);
@@ -47,7 +46,7 @@ static int _start(timer_tick_t period_msecs, void(*timer_handler)(ttimer_t *time
 	if(status != XST_SUCCESS)
 		return status;
 	XScuTimer_EnableAutoReload(timer);
-	load_value = XPAR_CPU_CORTEXA9_0_CPU_CLK_FREQ_HZ / (step*2);
+	load_value = XPAR_CPU_CORTEXA9_0_CPU_CLK_FREQ_HZ / (freq*2);
 	XScuTimer_LoadTimer(timer, load_value);
 	//Setup timer interrupts
 	Xil_ExceptionInit();
@@ -93,6 +92,8 @@ int scu_timer_init(ttimer_t *output)
 {
 	//Allocate and init scu_timer_t instance
 	scu_timer_t *scu_timer = (scu_timer_t *)memory_allocate(sizeof(scu_timer_t));
+	if(scu_timer == NULL)
+		return MEMORY_ERROR;
 	scu_timer->timer = output;
 	//Implement timer interface
 	output->context = (void *)scu_timer;

@@ -10,7 +10,7 @@
 
 #include "domain/parking.h"
 
-#define TIMER_PERIOD 10
+#define TIMER_FREQ 60
 
 static ttimer_t timer;
 static parking_t parking;
@@ -19,9 +19,8 @@ static void _timer_callback(ttimer_t _timer);
 
 static void _timer_callback(ttimer_t _timer)
 {
-	parking_step(&parking, _timer.period_msecs);
-	if(!(timer_get_ticks(_timer) % (100 / _timer.period_msecs)))
-		parking_render(parking);
+	parking_step(&parking, 60);
+	parking_render(parking);
 }
 
 int main(void)
@@ -51,7 +50,7 @@ int main(void)
 	}
 
 	/* Start timer */
-	result = timer_start(&timer, TIMER_PERIOD, _timer_callback);
+	result = timer_start(&timer, TIMER_FREQ, _timer_callback);
 	if(result != 0)
 	{
 		LOG("[error] Starting timer");
