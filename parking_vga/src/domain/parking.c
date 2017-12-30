@@ -14,10 +14,13 @@
 
 #include "lib/image.h"
 #include "lib/bmp.h"
+#include "lib/json.h"
 
 #include "config/gpio_config.h"
 #include "config/graphics_config.h"
 #include "config/stream_config.h"
+
+#define CONFIG_FILE_MAX_BYTES 8000
 
 #define TIMEOUT_TAKE_SPOT 4
 #define TIMEOUT_FREE_SPOT 4
@@ -28,15 +31,22 @@
 #define COLOR_PARKING_STATE_TAKEN 0xCCDD0011
 #define COLOR_PARKING_STATE_TAKING 0xCCFCF94E
 
-static int _parking_spot_init(parking_spot_t *output);
+static int _parking_spot_init(parking_spot_t *output, json_object config);
 static int _parking_spot_step(parking_spot_t *input, timestamp_t time);
 static void _parking_spot_render(graphics_t graphics, parking_spot_t input);
 static void _parking_spot_destroy(parking_spot_t *input);
 
-static int _parking_spot_init(parking_spot_t *output)
+static int _parking_spot_init(parking_spot_t *output, json_object config)
 {
-	//TODO
-	return 0;
+	output->id = (unsigned int)(*((json_integer *)json_object_find_key(config, "id", 0).value));
+	output->state = parking_state_unknown;
+	output->state_mode = parking_state_mode_normal;
+	CLOCK_SET(output->timestamp, 0, 0, 0, 0);
+	output->x1 = (size_t)(*((json_integer *)json_object_find_key(config, "x1", 0).value));
+	output->x2 = (size_t)(*((json_integer *)json_object_find_key(config, "x2", 0).value));
+	output->y1 = (size_t)(*((json_integer *)json_object_find_key(config, "y1", 0).value));
+	output->y2 = (size_t)(*((json_integer *)json_object_find_key(config, "y2", 0).value));
+	return gpio_config_get_input(&output->input_source, (json_string)json_object_find_key(config, "gpio", 0).value);
 }
 
 static int _parking_spot_step(parking_spot_t *input, timestamp_t time)
@@ -123,35 +133,55 @@ static void _parking_spot_destroy(parking_spot_t *input)
 
 int parking_init(parking_t *output)
 {
-	int result = 0;
-	//Parking spots
-	output->spots = (parking_spot_t *)memory_allocate(2 * sizeof(parking_spot_t));
-	output->count = 2;
-	for(size_t i = 0 ; i < output->count ; i++)
-	{
-		output->spots[i].id = i + 1;
-		output->spots[i].state = parking_state_unknown;
-		output->spots[i].state_mode = parking_state_mode_normal;
-		CLOCK_SET(output->spots[i].timestamp, 0, 0, 0, 0);
-	}
-	result = gpio_config_get_input(&output->spots[0].input_source, "switch0");
-	output->spots[0].x1 = 34;
-	output->spots[0].x2 = 147;
-	output->spots[0].y1 = 45;
-	output->spots[0].y2 = 184;
-	result = gpio_config_get_input(&output->spots[1].input_source, "switch1");
-	output->spots[1].x1 = 194;
-	output->spots[1].x2 = 298;
-	output->spots[1].y1 = 45;
-	output->spots[1].y2 = 184;
+	int result;
+	input_stream_t config_file;
+	char config[CONFIG_FILE_MAX_BYTES];
+	size_t config_length;
+	json_object parking, graphics, layout;
+	json_array spots;
+	json_allocator allocator = { .malloc = memory_allocate, .free = memory_free };
+	//Read config file
+	result = stream_config_get_input(&config_file, "parking.json");
+	if(result)
+		return result;
+	config_length = stream_read(config_file, config, CONFIG_FILE_MAX_BYTES);
+	//Parse configuration
+	result = (int)json_read_object(config, config_length, &allocator, &parking, &config_length);
+	if(result)
+		return result;
+	graphics = *((json_object *)json_object_find_key(parking, "graphics", 0).value);
+	layout = *((json_object *)json_object_find_key(parking, "layout", 0).value);
+	spots = *((json_array *)json_object_find_key(layout, "spots", 0).value);
 	//Time
 	CLOCK_SET(output->time, 0, 0, 0, 0);
 	//Graphics
-	result = graphics_config_get(&output->graphics, "hdmi", "800x600");
+	result = graphics_config_get(&output->graphics
+			, (json_string)json_object_find_key(graphics, "device", 0).value
+			, (json_string)json_object_find_key(graphics, "mode", 0).value);
+	if(result)
+		return result;
 	//Background image
 	input_stream_t image_input;
-	result = stream_config_get_input(&image_input, "parking.bmp");
+	result = stream_config_get_input(&image_input, (json_string)json_object_find_key(layout, "background", 0).value);
+	if(result)
+		return result;
 	result = bmp_load(image_input, &output->background_image);
+	stream_close_input(image_input);
+	if(result)
+		return result;
+	//Parking spots
+	output->count = spots.count;
+	output->spots = (parking_spot_t *)memory_allocate(sizeof(parking_spot_t) * spots.count);
+	for(size_t i = 0 ; i < output->count ; i++)
+	{
+		result = _parking_spot_init(&output->spots[i], *((json_object *)spots.values[i].value));
+		if(result)
+			return result;
+	}
+	//Destroy json object
+	json_free_object(&allocator, parking);
+	//Destroy config input stream
+	stream_close_input(config_file);
 	return 0;
 }
 
