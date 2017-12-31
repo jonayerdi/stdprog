@@ -15,6 +15,13 @@
 #include "lib/clock.h" /* clock_t */
 #include "lib/image.h" /* image_t */
 
+#define PARKING_ERROR_CONFIG_STREAM	 	0x01
+#define PARKING_ERROR_CONFIG_PARSE 		0x02
+#define PARKING_ERROR_INIT_GRAPHICS 	0x03
+#define PARKING_ERROR_IMAGE_STREAM 		0x04
+#define PARKING_ERROR_IMAGE_PARSE 		0x05
+#define PARKING_ERROR_CONFIG_SPOT		0x06
+
 #define GPIO_VALUE_FREE ((gpio_value_t)0)
 #define GPIO_VALUE_TAKEN ((gpio_value_t)1)
 
@@ -55,7 +62,7 @@ typedef struct parking
 	image_t background_image;
 } parking_t;
 
-int parking_init(parking_t *output);
+int parking_init(parking_t *output, const char *config_filename);
 int parking_step(parking_t *input, timestamp_t time_diff);
 void parking_render(parking_t input);
 void parking_destroy(parking_t *input);

@@ -131,7 +131,7 @@ static void _parking_spot_destroy(parking_spot_t *input)
 	gpio_input_destroy(input->input_source);
 }
 
-int parking_init(parking_t *output)
+int parking_init(parking_t *output, const char *config_filename)
 {
 	int result;
 	input_stream_t config_file;
@@ -141,14 +141,14 @@ int parking_init(parking_t *output)
 	json_array spots;
 	json_allocator allocator = { .malloc = memory_allocate, .free = memory_free };
 	//Read config file
-	result = stream_config_get_input(&config_file, "parking.json");
+	result = stream_config_get_input(&config_file, config_filename);
 	if(result)
-		return result;
+		return PARKING_ERROR_CONFIG_STREAM;
 	config_length = stream_read(config_file, config, CONFIG_FILE_MAX_BYTES);
 	//Parse configuration
 	result = (int)json_read_object(config, config_length, &allocator, &parking, &config_length);
 	if(result)
-		return result;
+		return PARKING_ERROR_CONFIG_PARSE;
 	graphics = *((json_object *)json_object_find_key(parking, "graphics", 0).value);
 	layout = *((json_object *)json_object_find_key(parking, "layout", 0).value);
 	spots = *((json_array *)json_object_find_key(layout, "spots", 0).value);
@@ -159,16 +159,16 @@ int parking_init(parking_t *output)
 			, (json_string)json_object_find_key(graphics, "device", 0).value
 			, (json_string)json_object_find_key(graphics, "mode", 0).value);
 	if(result)
-		return result;
+		return PARKING_ERROR_INIT_GRAPHICS;
 	//Background image
 	input_stream_t image_input;
 	result = stream_config_get_input(&image_input, (json_string)json_object_find_key(layout, "background", 0).value);
 	if(result)
-		return result;
+		return PARKING_ERROR_IMAGE_STREAM;
 	result = bmp_load(image_input, &output->background_image);
 	stream_close_input(image_input);
 	if(result)
-		return result;
+		return PARKING_ERROR_IMAGE_PARSE;
 	//Parking spots
 	output->count = spots.count;
 	output->spots = (parking_spot_t *)memory_allocate(sizeof(parking_spot_t) * spots.count);
@@ -176,7 +176,7 @@ int parking_init(parking_t *output)
 	{
 		result = _parking_spot_init(&output->spots[i], *((json_object *)spots.values[i].value));
 		if(result)
-			return result;
+			return PARKING_ERROR_CONFIG_SPOT;
 	}
 	//Destroy json object
 	json_free_object(&allocator, parking);

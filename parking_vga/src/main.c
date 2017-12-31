@@ -34,10 +34,34 @@ int main(void)
 	LOG("[start] Starting application\n");
 
 	/* Init parking */
-	result = parking_init(&parking);
+	result = parking_init(&parking, "parking.txt");
 	if(result != 0)
 	{
-		LOG("[error] Parking init");
+		LOG("[error] Parking init: ");
+		switch(result)
+		{
+			case PARKING_ERROR_CONFIG_STREAM:
+				LOG("Error opening parking.txt\n");
+				break;
+			case PARKING_ERROR_CONFIG_PARSE:
+				LOG("Error parsing parking.txt\n");
+				break;
+			case PARKING_ERROR_INIT_GRAPHICS:
+				LOG("Error initializing graphics\n");
+				break;
+			case PARKING_ERROR_IMAGE_STREAM:
+				LOG("Error opening background image file\n");
+				break;
+			case PARKING_ERROR_IMAGE_PARSE:
+				LOG("Error parsing background image file\n");
+				break;
+			case PARKING_ERROR_CONFIG_SPOT:
+				LOG("Error initializing one or more parking spots\n");
+				break;
+			default:
+				LOG("Unknown error\n");
+				break;
+		}
 		return 0;
 	}
 
@@ -45,7 +69,7 @@ int main(void)
 	result = timer_config_get_default(&timer);
 	if(result != 0)
 	{
-		LOG("[error] SCU Timer init");
+		LOG("[error] SCU Timer init\n");
 		return 0;
 	}
 
@@ -53,7 +77,7 @@ int main(void)
 	result = timer_start(&timer, TIMER_FREQ, _timer_callback);
 	if(result != 0)
 	{
-		LOG("[error] Starting timer");
+		LOG("[error] Starting timer\n");
 		return 0;
 	}
 
