@@ -15,6 +15,7 @@
 #include "lib/image.h"
 #include "lib/bmp.h"
 #include "lib/json.h"
+#include "lib/state_machine.h"
 
 #include "config/gpio_config.h"
 #include "config/graphics_config.h"
