@@ -17,11 +17,16 @@ Objetivos:
 
 Implementado actualmente:
     -VGA (imagenes BMP, circulos, rectangulos y texto), timer, gpio, stdio, ficheros y otros
+	-Parsear configuracion JSON
 	-Logica de estados de las plazas de parking
 	-Visualizacion del parking con estados de las plazas
 
+Librerías externas:
+	-hal/vga/*
+	-lib/font8x8.h
+	-lib/json.h, lib/json.c
+
 Falta implementar:
-	-Parsear configuracion JSON
 	-Integrar la libreria de maquinas de estado para las plazas
 	-Simular estados forzados con switches
 	

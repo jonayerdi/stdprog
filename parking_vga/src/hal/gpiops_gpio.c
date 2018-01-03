@@ -62,10 +62,15 @@ int gpiops_input_init(gpio_input_t *out, gpiops_id_t id)
 	XGpioPs gpio;
 	s32 status;
 	gpiops_gpio_t *context = (gpiops_gpio_t *)memory_allocate(sizeof(gpiops_gpio_t));
+	if(context == NULL)
+		return MEMORY_ERROR;
 	//Configure GPIO device
 	status = gpiops_init(&gpio, id, GPIO_IN);
 	if(status != XST_SUCCESS)
+	{
+		memory_free(context);
 		return status;
+	}
 	//Implement gpio_input_t
 	context->gpio = gpio;
 	context->pin = id.pin;
@@ -81,10 +86,15 @@ int gpiops_output_init(gpio_output_t *out, gpiops_id_t id)
 	XGpioPs gpio;
 	s32 status;
 	gpiops_gpio_t *context = (gpiops_gpio_t *)memory_allocate(sizeof(gpiops_gpio_t));
+	if(context == NULL)
+		return MEMORY_ERROR;
 	//Configure GPIO device
 	status = gpiops_init(&gpio, id, GPIO_OUT);
 	if(status != XST_SUCCESS)
+	{
+		memory_free(context);
 		return status;
+	}
 	//Implement gpio_input_t
 	context->gpio = gpio;
 	context->pin = id.pin;

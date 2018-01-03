@@ -64,12 +64,18 @@ int file_input_stream(input_stream_t *stream, const char *filename)
 	{
 		result = f_mount(&filesystem, "", 0);
 		if(result != FR_OK)
+		{
+			memory_free(file);
 			return result;
+		}
 	}
 	/* Open file */
 	result = f_open(file, filename, FA_READ | FA_OPEN_EXISTING);
 	if(result != FR_OK)
+	{
+		memory_free(file);
 		return result;
+	}
 	/* Implement input_stream_t */
 	stream->read = _read;
 	stream->discard = _discard;
@@ -89,12 +95,18 @@ int file_output_stream(output_stream_t *stream, const char *filename)
 	{
 		result = f_mount(&filesystem, "", 0);
 		if(result != FR_OK)
+		{
+			memory_free(file);
 			return result;
+		}
 	}
 	/* Open file */
 	result = f_open(file, filename, FA_WRITE | FA_CREATE_ALWAYS);
 	if(result != FR_OK)
+	{
+		memory_free(file);
 		return result;
+	}
 	/* Implement output_stream_t */
 	stream->write = _write;
 	stream->flush = _flush;

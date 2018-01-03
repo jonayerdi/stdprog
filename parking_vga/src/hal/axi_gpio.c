@@ -49,10 +49,15 @@ int axi_gpio_input_init(gpio_input_t *out, axi_gpio_id_t id)
 	XGpio axi;
 	s32 status;
 	axi_gpio_t *context = (axi_gpio_t *)memory_allocate(sizeof(axi_gpio_t));
+	if(context == NULL)
+		return MEMORY_ERROR;
 	//Configure AXI
 	status = XGpio_Initialize(&axi, id.device_id);
 	if(status != XST_SUCCESS)
+	{
+		memory_free(context);
 		return status;
+	}
 	XGpio_SetDataDirectionPin(&axi, id.channel, id.pin, AXI_IN);
 	//Implement gpio_input_t
 	context->gpio = axi;
@@ -70,10 +75,15 @@ int axi_gpio_output_init(gpio_output_t *out, axi_gpio_id_t id)
 	XGpio axi;
 	s32 status;
 	axi_gpio_t *context = (axi_gpio_t *)memory_allocate(sizeof(axi_gpio_t));
+	if(context == NULL)
+		return MEMORY_ERROR;
 	//Configure AXI
 	status = XGpio_Initialize(&axi, id.device_id);
 	if(status != XST_SUCCESS)
+	{
+		memory_free(context);
 		return status;
+	}
 	XGpio_SetDataDirectionPin(&axi, id.channel, id.pin, AXI_OUT);
 	//Implement gpio_input_t
 	context->gpio = axi;
