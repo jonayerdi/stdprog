@@ -22,31 +22,29 @@
 #define PARKING_ERROR_IMAGE_PARSE 		0x05
 #define PARKING_ERROR_CONFIG_SPOT		0x06
 
-#define GPIO_VALUE_FREE ((gpio_value_t)0)
-#define GPIO_VALUE_TAKEN ((gpio_value_t)1)
-
-typedef enum parking_state
+typedef enum parking_spot_state
 {
-	parking_state_unknown,
-	parking_state_free,
-	parking_state_freeing,
-	parking_state_taken,
-	parking_state_taking
-} parking_state_t;
+	parking_state_unknown = 0,
+	parking_state_free = 1,
+	parking_state_freeing = 2,
+	parking_state_taken = 3,
+	parking_state_taking = 4
+} parking_spot_state_t;
 
-typedef enum parking_state_mode
+typedef enum parking_spot_mode
 {
-	parking_state_mode_normal,
-	parking_state_mode_forced
-} parking_state_mode_t;
+	parking_spot_mode_normal,
+	parking_spot_mode_forced
+} parking_spot_mode_t;
 
 typedef struct parking_spot
 {
 	unsigned int id;
-	parking_state_t state;
-	parking_state_mode_t state_mode;
+	parking_spot_state_t state;
+	parking_spot_mode_t mode;
 	timestamp_t timestamp;
 	gpio_input_t input_source;
+	gpio_input_t forced_source;
 	size_t x1;
 	size_t x2;
 	size_t y1;

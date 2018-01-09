@@ -15,13 +15,15 @@
 #include "lib/image.h"
 #include "lib/bmp.h"
 #include "lib/json.h"
-#include "lib/state_machine.h"
 
 #include "config/gpio_config.h"
 #include "config/graphics_config.h"
 #include "config/stream_config.h"
 
 #define CONFIG_FILE_MAX_BYTES 8000
+
+#define GPIO_VALUE_FREE ((gpio_value_t)0)
+#define GPIO_VALUE_TAKEN ((gpio_value_t)1)
 
 #define TIMEOUT_TAKE_SPOT 4
 #define TIMEOUT_FREE_SPOT 4
@@ -39,20 +41,29 @@ static void _parking_spot_destroy(parking_spot_t *input);
 
 static int _parking_spot_init(parking_spot_t *output, json_object config)
 {
+	int error;
 	output->id = (unsigned int)(*((json_integer *)json_object_find_key(config, "id", 0).value));
 	output->state = parking_state_unknown;
-	output->state_mode = parking_state_mode_normal;
+	output->mode = parking_spot_mode_normal;
 	CLOCK_SET(output->timestamp, 0, 0, 0, 0);
 	output->x1 = (size_t)(*((json_integer *)json_object_find_key(config, "x1", 0).value));
 	output->x2 = (size_t)(*((json_integer *)json_object_find_key(config, "x2", 0).value));
 	output->y1 = (size_t)(*((json_integer *)json_object_find_key(config, "y1", 0).value));
 	output->y2 = (size_t)(*((json_integer *)json_object_find_key(config, "y2", 0).value));
-	return gpio_config_get_input(&output->input_source, (json_string)json_object_find_key(config, "gpio", 0).value);
+	error = gpio_config_get_input(&output->input_source, (json_string)json_object_find_key(config, "input_source", 0).value);
+	if(error)
+		return error;
+	error = gpio_config_get_input(&output->forced_source, (json_string)json_object_find_key(config, "forced_source", 0).value);
+	return error;
 }
 
 static int _parking_spot_step(parking_spot_t *input, timestamp_t time)
 {
-	if(input->state_mode == parking_state_mode_normal)
+	//Only for demo purposes, parking mode and state would be set via remote commands
+	if(gpio_get(input->forced_source) == GPIO_VALUE_TAKEN)
+		input->state = parking_state_taken;
+	//State machine
+	if(input->mode == parking_spot_mode_normal)
 	{
 		gpio_value_t value = gpio_get(input->input_source);
 		switch(input->state)
@@ -130,6 +141,7 @@ static void _parking_spot_render(graphics_t graphics, parking_spot_t input)
 static void _parking_spot_destroy(parking_spot_t *input)
 {
 	gpio_input_destroy(input->input_source);
+	gpio_input_destroy(input->forced_source);
 }
 
 int parking_init(parking_t *output, const char *config_filename)

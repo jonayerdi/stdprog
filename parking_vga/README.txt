@@ -20,15 +20,19 @@ Implementado actualmente:
 	-Parsear configuracion JSON
 	-Logica de estados de las plazas de parking
 	-Visualizacion del parking con estados de las plazas
+	-La configuracion de prueba parking.json
+	
+No se va a integrar:
+	-Libreria de maquinas de estado
+		-Implementacion en state_machine.zip
+		-La libreria no es adecuada para el proyecto:
+			-Esta pensada para trabajar sobre el stack
+			-No se le pueden pasar parametros
 
 Librerías externas:
 	-hal/vga/*
 	-lib/font8x8.h
 	-lib/json.h, lib/json.c
-
-Falta implementar:
-	-Integrar la libreria de maquinas de estado para las plazas
-	-Simular estados forzados con switches
 	
 Estructura de carpetas:
 	-config: obtencion de implementaciones para interfaces genéricas
