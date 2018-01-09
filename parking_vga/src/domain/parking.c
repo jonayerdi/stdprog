@@ -61,7 +61,15 @@ static int _parking_spot_step(parking_spot_t *input, timestamp_t time)
 {
 	//Only for demo purposes, parking mode and state would be set via remote commands
 	if(gpio_get(input->forced_source) == GPIO_VALUE_TAKEN)
+	{
+		input->mode = parking_spot_mode_forced;
 		input->state = parking_state_taken;
+	}
+	else if(input->mode == parking_spot_mode_forced)
+	{
+		input->mode = parking_spot_mode_normal;
+		input->state = parking_state_unknown;
+	}
 	//State machine
 	if(input->mode == parking_spot_mode_normal)
 	{

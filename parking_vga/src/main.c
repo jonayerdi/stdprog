@@ -19,7 +19,7 @@ static void _timer_callback(ttimer_t _timer);
 
 static void _timer_callback(ttimer_t _timer)
 {
-	parking_step(&parking, 60);
+	parking_step(&parking, 80);
 	parking_render(parking);
 }
 
