@@ -1,14 +1,23 @@
-/*
- * graphics_config.c
- *
- *  Created on: 19 Dec 2017
- *      Author: Jon Ayerdi
- */
+/*****************************************************************************************
+*                                   graphics_config.c
+******************************************************************************************
+* AUTHOR: Jon Ayerdi
+*
+* DESCRIPTION: Mapping of graphics implementations to their names
+*
+*****************************************************************************************/
 
+/*--------------------------------------------------------------------------------------*/
+/*                                       INCLUDES                                       */
+/*--------------------------------------------------------------------------------------*/
 #include "config/graphics_config.h"
 
 #include "hal/vga_graphics.h"
 #include "hal/vga/vga_modes.h"
+
+/*--------------------------------------------------------------------------------------*/
+/*                                        MACROS                                        */
+/*--------------------------------------------------------------------------------------*/
 
 /* VGA or HDMI */
 #define VGA_GRAPHICS_DISPLAY_NOT_HDMI DISPLAY_NOT_HDMI
@@ -42,6 +51,10 @@
 #define GRAPHICS_CONFIG_MAP_MODE(NAME,VALUE) { if(!strcmp(mode_name, NAME)) { mode = VALUE; } }
 #define GRAPHICS_CONFIG_MAP_DEVICE(NAME,VALUE) { if(!strcmp(device_name, NAME)) { vga_graphics_config_t _config = VALUE; config = _config; } }
 
+/*--------------------------------------------------------------------------------------*/
+/*                            PUBLIC FUNCTION DECLARATIONS                              */
+/*--------------------------------------------------------------------------------------*/
+
 int graphics_config_get(graphics_t *output, const char *device_name, const char *mode_name)
 {
 	//Variables
@@ -66,3 +79,7 @@ int graphics_config_get(graphics_t *output, const char *device_name, const char 
 	}
 	return GRAPHICS_CONFIG_MODE_NOT_FOUND;
 }
+
+/*****************************************************************************************
+*                                   graphics_config.c
+*****************************************************************************************/

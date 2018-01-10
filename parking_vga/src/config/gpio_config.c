@@ -1,10 +1,15 @@
-/*
- * gpio_config.c
- *
- *  Created on: 19 Dec 2017
- *      Author: Jon Ayerdi
- */
+/*****************************************************************************************
+*                                    gpio_config.c
+******************************************************************************************
+* AUTHOR: Jon Ayerdi
+*
+* DESCRIPTION: Mapping of gpio implementations to their names
+*
+*****************************************************************************************/
 
+/*--------------------------------------------------------------------------------------*/
+/*                                       INCLUDES                                       */
+/*--------------------------------------------------------------------------------------*/
 #include "config/gpio_config.h"
 
 #include "hal/fixed_gpio.h"
@@ -12,6 +17,10 @@
 #include "hal/axi_gpio.h"
 
 #include <string.h>
+
+/*--------------------------------------------------------------------------------------*/
+/*                                      CONSTANTS                                       */
+/*--------------------------------------------------------------------------------------*/
 
 /* MIO */
 /* Buttons */
@@ -37,8 +46,16 @@ const axi_gpio_id_t axi_gpio_led1 = { .device_id = XPAR_LEDS_4BITS_DEVICE_ID, .c
 const axi_gpio_id_t axi_gpio_led2 = { .device_id = XPAR_LEDS_4BITS_DEVICE_ID, .channel = 1, .pin = 2 };
 const axi_gpio_id_t axi_gpio_led3 = { .device_id = XPAR_LEDS_4BITS_DEVICE_ID, .channel = 1, .pin = 3 };
 
+/*--------------------------------------------------------------------------------------*/
+/*                                        MACROS                                        */
+/*--------------------------------------------------------------------------------------*/
+
 /* Utils */
 #define GPIO_CONFIG_MAP(NAME,VALUE) { if(!strcmp(gpio_name, NAME)) { return VALUE; } }
+
+/*--------------------------------------------------------------------------------------*/
+/*                            PUBLIC FUNCTION DECLARATIONS                              */
+/*--------------------------------------------------------------------------------------*/
 
 int gpio_config_get_input(gpio_input_t *out, const char *gpio_name)
 {
@@ -70,3 +87,7 @@ int gpio_config_get_output(gpio_output_t *out, const char *gpio_name)
 	GPIO_CONFIG_MAP("led4", gpiops_output_init(out, gpiops_led4));
 	return GPIO_CONFIG_NOT_FOUND;
 }
+
+/*****************************************************************************************
+*                                    gpio_config.c
+*****************************************************************************************/
