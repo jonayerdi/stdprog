@@ -132,6 +132,8 @@ int parking_spot_init_state_machine(TS_MACHINE *state_machine, parking_t *parkin
 	if(parking_context == NULL)
 		return MEMORY_ERROR;
 	//Define state machine
+	parking_context->parking = parking;
+	parking_context->spot = spot;
 	state_machine->StopCond = parking_spot_state_machine_stop_condition;
 	state_machine->contexto = parking_context;
 	state_machine->estado_actual = parking_state_unknown;
