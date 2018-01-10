@@ -20,14 +20,9 @@ Implementado actualmente:
 	-Parsear configuracion JSON
 	-Logica de estados de las plazas de parking
 	-Visualizacion del parking con estados de las plazas
-	-La configuracion de prueba parking.json
-	
-No se va a integrar:
 	-Libreria de maquinas de estado
-		-Implementacion en state_machine.zip
-		-La libreria no es adecuada para el proyecto:
-			-Esta pensada para trabajar sobre el stack
-			-No se le pueden pasar parametros
+		-Modificada para poder pasar parametros a las funciones
+	-La configuracion de prueba parking.json
 
 Librerías externas:
 	-hal/vga/*
@@ -42,4 +37,4 @@ Estructura de carpetas:
     -lib: implementaciones portables de interfaces en io y otros componentes (parsear fichero BMP...)
 
 Templates:
-    -Se ha seguido el template definido para el proyecto en io/gpio.h e io/gpio.c como prueba
+    -Se ha seguido el template definido y se han añadido comentarios para generar la documentación doxygen
