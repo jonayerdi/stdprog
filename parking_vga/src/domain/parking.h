@@ -12,8 +12,10 @@
 
 #include "io/graphics.h" /* graphics_t */
 #include "io/gpio.h" /* gpio_input_t */
+
 #include "lib/clock.h" /* clock_t */
 #include "lib/image.h" /* image_t */
+#include "lib/state_machine.h" /* TS_MACHINE */
 
 #define PARKING_ERROR_CONFIG_STREAM	 	0x01
 #define PARKING_ERROR_CONFIG_PARSE 		0x02
@@ -21,15 +23,6 @@
 #define PARKING_ERROR_IMAGE_STREAM 		0x04
 #define PARKING_ERROR_IMAGE_PARSE 		0x05
 #define PARKING_ERROR_CONFIG_SPOT		0x06
-
-typedef enum parking_spot_state
-{
-	parking_state_unknown = 0,
-	parking_state_free = 1,
-	parking_state_freeing = 2,
-	parking_state_taken = 3,
-	parking_state_taking = 4
-} parking_spot_state_t;
 
 typedef enum parking_spot_mode
 {
@@ -40,7 +33,7 @@ typedef enum parking_spot_mode
 typedef struct parking_spot
 {
 	unsigned int id;
-	parking_spot_state_t state;
+	TS_MACHINE state_machine;
 	parking_spot_mode_t mode;
 	timestamp_t timestamp;
 	gpio_input_t input_source;
