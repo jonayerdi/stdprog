@@ -1,9 +1,15 @@
-/*
- * parking_spot_state_machine.c
- *
- *  Created on: 9 Jan 2018
- *      Author: Jon Ayerdi
- */
+/*****************************************************************************************
+*                             parking_spot_state_machine.c
+******************************************************************************************
+* AUTHOR: Jon Ayerdi
+*
+* DESCRIPTION: State machine of a parking spot.
+*
+*****************************************************************************************/
+
+/*--------------------------------------------------------------------------------------*/
+/*                                       INCLUDES                                       */
+/*--------------------------------------------------------------------------------------*/
 
 #include "domain/parking_spot_state_machine.h"
 
@@ -13,6 +19,10 @@
 #include "io/gpio.h"
 
 #include "lib/clock.h"
+
+/*--------------------------------------------------------------------------------------*/
+/*                                      CONSTANTS                                       */
+/*--------------------------------------------------------------------------------------*/
 
 static TS_TRANS _unknown_state_transitions[] =
 {
@@ -99,6 +109,10 @@ static TS_ESTADO _estados[] =
 	}
 };
 
+/*--------------------------------------------------------------------------------------*/
+/*                             PUBLIC FUNCTION DEFINITIONS                              */
+/*--------------------------------------------------------------------------------------*/
+
 BOOLEAN parking_spot_state_machine_stop_condition(void *context)
 {
 	parking_spot_state_machine_context_t *parking_context = (parking_spot_state_machine_context_t *)context;
@@ -146,3 +160,7 @@ void parking_spot_destroy_state_machine(TS_MACHINE state_machine)
 {
 	memory_free(state_machine.contexto);
 }
+
+/*****************************************************************************************
+*                             parking_spot_state_machine.c
+*****************************************************************************************/

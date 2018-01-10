@@ -1,10 +1,15 @@
-/*
- * parking.c
- *
- *  Created on: 15 Nov 2017
- *      Author: Jon Ayerdi
- */
+/*****************************************************************************************
+*                                        parking.c
+******************************************************************************************
+* AUTHOR: Jon Ayerdi
+*
+* DESCRIPTION: Parking monitoring application.
+*
+*****************************************************************************************/
 
+/*--------------------------------------------------------------------------------------*/
+/*                                       INCLUDES                                       */
+/*--------------------------------------------------------------------------------------*/
 #include "domain/parking.h"
 
 #include "domain/parking_spot_state_machine.h"
@@ -22,6 +27,10 @@
 #include "config/graphics_config.h"
 #include "config/stream_config.h"
 
+/*--------------------------------------------------------------------------------------*/
+/*                                        MACROS                                        */
+/*--------------------------------------------------------------------------------------*/
+
 #define CONFIG_FILE_MAX_BYTES 8000
 
 #define COLOR_PARKING_STATE_UNKNOWN 0xCCAAAAAA
@@ -29,6 +38,10 @@
 #define COLOR_PARKING_STATE_FREEING 0xCCBB00BB
 #define COLOR_PARKING_STATE_TAKEN 0xCCDD0011
 #define COLOR_PARKING_STATE_TAKING 0xCCFCF94E
+
+/*--------------------------------------------------------------------------------------*/
+/*                            		 PRIVATE FUNCTIONS                                  */
+/*--------------------------------------------------------------------------------------*/
 
 static int _parking_spot_init(parking_t *parking, parking_spot_t *output, json_object config);
 static int _parking_spot_step(parking_spot_t *input, timestamp_t time);
@@ -103,6 +116,10 @@ static void _parking_spot_destroy(parking_spot_t *input)
 	gpio_input_destroy(input->input_source);
 	gpio_input_destroy(input->forced_source);
 }
+
+/*--------------------------------------------------------------------------------------*/
+/*                             PUBLIC FUNCTION DEFINITIONS                              */
+/*--------------------------------------------------------------------------------------*/
 
 int parking_init(parking_t *output, const char *config_filename)
 {
@@ -185,3 +202,7 @@ void parking_destroy(parking_t *input)
 	//Background image
 	image_free(&input->background_image);
 }
+
+/*****************************************************************************************
+*                                        parking.c
+*****************************************************************************************/
