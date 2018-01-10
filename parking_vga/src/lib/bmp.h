@@ -60,7 +60,7 @@ typedef struct bmp_header
 } __attribute__((packed)) bmp_header_t;
 
 /*--------------------------------------------------------------------------------------*/
-/*                                  PUBLIC FUNCTIONS                                    */
+/*                            PUBLIC FUNCTION DECLARATIONS                              */
 /*--------------------------------------------------------------------------------------*/
 
 /** @brief parses a BMP image from an input stream.

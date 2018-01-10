@@ -38,7 +38,7 @@ typedef struct image
 } image_t;
 
 /*--------------------------------------------------------------------------------------*/
-/*                                  PUBLIC FUNCTIONS                                    */
+/*                            PUBLIC FUNCTION DECLARATIONS                              */
 /*--------------------------------------------------------------------------------------*/
 
 /** @brief performs the alpha compositing of value into target.
@@ -51,6 +51,7 @@ void pixel_alpha_compositing(pixel_t *target, pixel_t value);
  *  @param image the image where the pixel buffer needs to be allocated.
  *  @param x width of the image.
  *  @param y height of the image.
+ *  @return either 0 (OK) or MEMORY_ERROR
  */
 int image_alloc(image_t *image, size_t x, size_t y);
 /** @brief frees the allocated memory of an image previously initializad with image_alloc.

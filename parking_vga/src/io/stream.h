@@ -1,14 +1,22 @@
-/*
- * stream.h
- *
- *  Created on: 15 Nov 2017
- *      Author: Jon Ayerdi
- */
-
+/*****************************************************************************************
+*                                         stream.h
+******************************************************************************************
+* AUTHOR: Jon Ayerdi
+*
+* DESCRIPTION: Interfaces for input and output streams.
+*
+*****************************************************************************************/
 #ifndef SRC_IO_STREAM_H_
 #define SRC_IO_STREAM_H_
 
+/*--------------------------------------------------------------------------------------*/
+/*                                       INCLUDES                                       */
+/*--------------------------------------------------------------------------------------*/
 #include <stddef.h> /* size_t */
+
+/*--------------------------------------------------------------------------------------*/
+/*                                        TYPES                                         */
+/*--------------------------------------------------------------------------------------*/
 
 typedef struct input_stream
 {
@@ -26,16 +34,59 @@ typedef struct output_stream
 	void *context;
 } output_stream_t;
 
+/*--------------------------------------------------------------------------------------*/
+/*                           PUBLIC FUNCTION DECLARATIONS                               */
+/*--------------------------------------------------------------------------------------*/
+
+/** @brief closes the given stream.
+ *  @param stream the stream to close.
+ */
 void stream_close_input(input_stream_t stream);
+/** @brief closes the given stream.
+ *  @param stream the stream to close.
+ */
 void stream_close_output(output_stream_t stream);
 
+/** @brief discards all input from the given stream.
+ *  @param stream the stream to discard.
+ */
 void stream_discard(input_stream_t stream);
+/** @brief flushes all the output of the given stream.
+ *  @param stream the stream to flush.
+ */
 void stream_flush(output_stream_t stream);
 
+/** @brief reads bytes from the given stream.
+ *  @param stream the stream to read.
+ *  @param output buffer to write the data.
+ *  @param length number of bytes to read.
+ *  @return number of bytes read.
+ */
 size_t stream_read(input_stream_t stream, char *output, size_t length);
+/** @brief writes bytes to the given stream.
+ *  @param stream the stream to write.
+ *  @param input buffer to read the data.
+ *  @param length number of bytes to write.
+ *  @return number of bytes written.
+ */
 size_t stream_write(output_stream_t stream, const char *input, size_t length);
 
+/** @brief reads a line from the given stream.
+ *  @param stream the stream to read.
+ *  @param output buffer to write the data.
+ *  @param length max number of bytes to read.
+ *  @return number of bytes read.
+ */
 size_t stream_read_line(input_stream_t stream, char *output, size_t length);
+/** @brief writes a string to the given stream.
+ *  @param stream the stream to write.
+ *  @param input buffer to read the data.
+ *  @return number of bytes written.
+ */
 size_t stream_write_string(output_stream_t stream, const char *input);
 
 #endif /* SRC_IO_STREAM_H_ */
+
+/*****************************************************************************************
+*                                         stream.h
+*****************************************************************************************/
