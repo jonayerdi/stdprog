@@ -33,7 +33,7 @@ typedef struct scu_timer
 /*--------------------------------------------------------------------------------------*/
 
 /** @brief initializes the scu timer.
- *  @param out the timer.
+ *  @param output the timer.
  *  @return 0 (OK) or nonzero (error).
  */
 int scu_timer_init(ttimer_t *output);

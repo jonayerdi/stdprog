@@ -19,12 +19,12 @@
 /*--------------------------------------------------------------------------------------*/
 
 /** @brief initializes a stdio input stream.
- *  @param out the stream.
+ *  @param stream the stream.
  *  @return 0 (OK) or nonzero (error).
  */
 int stdio_input_stream(input_stream_t *stream);
 /** @brief initializes a stdio output stream.
- *  @param out the stream.
+ *  @param stream the stream.
  *  @return 0 (OK) or nonzero (error).
  */
 int stdio_output_stream(output_stream_t *stream);

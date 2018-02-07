@@ -63,7 +63,7 @@ BOOLEAN parking_spot_state_machine_timeout_elapsed(void *context);
  */
 int parking_spot_init_state_machine(TS_MACHINE *state_machine, parking_t *parking, parking_spot_t * spot);
 /** @brief destroys the parking state_machine instance.
- *  @param input the state_machine.
+ *  @param state_machine the state_machine.
  */
 void parking_spot_destroy_state_machine(TS_MACHINE state_machine);
 
