@@ -1,10 +1,7 @@
-/*****************************************************************************************
-*                                   stream_config.h
-******************************************************************************************
-* AUTHOR: Jon Ayerdi
-*
-* DESCRIPTION: Mapping of stream implementations to their names
-*
+/*************************************************************************************//**
+* @file stream_config.h
+* @brief Mapping of stream implementations to their names
+* @author Jon Ayerdi
 *****************************************************************************************/
 #ifndef SRC_CONFIG_STREAM_CONFIG_H_
 #define SRC_CONFIG_STREAM_CONFIG_H_

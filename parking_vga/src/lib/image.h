@@ -1,10 +1,7 @@
-/*****************************************************************************************
-*                                         image.h
-******************************************************************************************
-* AUTHOR: Jon Ayerdi
-*
-* DESCRIPTION: Defines an image format and basic functions to manipulate it
-*
+/*************************************************************************************//**
+* @file image.h
+* @brief Defines an image format and basic functions to manipulate it
+* @author Jon Ayerdi
 *****************************************************************************************/
 #ifndef SRC_LIB_IMAGE_H_
 #define SRC_LIB_IMAGE_H_

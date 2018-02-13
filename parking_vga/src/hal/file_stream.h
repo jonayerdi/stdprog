@@ -1,10 +1,7 @@
-/*****************************************************************************************
-*                                      file_stream.h
-******************************************************************************************
-* AUTHOR: Jon Ayerdi
-*
-* DESCRIPTION: Implementation of file streams for the ZYBO 7000 board
-*
+/*************************************************************************************//**
+* @file file_stream.h
+* @brief Implementation of file streams for the ZYBO 7000 board
+* @author Jon Ayerdi
 *****************************************************************************************/
 #ifndef SRC_HAL_FILE_STREAM_H_
 #define SRC_HAL_FILE_STREAM_H_

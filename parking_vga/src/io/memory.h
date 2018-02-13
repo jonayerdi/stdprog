@@ -6,6 +6,11 @@
 * DESCRIPTION: Interfaces for memory allocation
 *
 *****************************************************************************************/
+/*************************************************************************************//**
+* @file memory.h
+* @brief Interfaces for memory allocation
+* @author Jon Ayerdi
+*****************************************************************************************/
 #ifndef SRC_IO_MEMORY_H_
 #define SRC_IO_MEMORY_H_
 

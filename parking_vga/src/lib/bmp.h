@@ -1,11 +1,7 @@
-/*****************************************************************************************
-*                                         bmp.h
-******************************************************************************************
-* AUTHOR: Jon Ayerdi
-*
-* DESCRIPTION: Defines the BMP image file format and provides an
-* interface to parse a BMP file from a stream
-*
+/*************************************************************************************//**
+* @file bmp.h
+* @brief Defines the BMP image file format and provides an interface to parse a BMP file from a stream
+* @author Jon Ayerdi
 *****************************************************************************************/
 #ifndef SRC_LIB_BMP_H_
 #define SRC_LIB_BMP_H_

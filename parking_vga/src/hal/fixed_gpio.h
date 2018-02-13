@@ -1,10 +1,7 @@
-/*****************************************************************************************
-*                                      fixed_gpio.h
-******************************************************************************************
-* AUTHOR: Jon Ayerdi
-*
-* DESCRIPTION: Implementation of constant value GPIOs
-*
+/*************************************************************************************//**
+* @file fixed_gpio.h
+* @brief Implementation of constant value GPIOs
+* @author Jon Ayerdi
 *****************************************************************************************/
 #ifndef SRC_HAL_FIXED_GPIO_H_
 #define SRC_HAL_FIXED_GPIO_H_

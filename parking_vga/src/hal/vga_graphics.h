@@ -1,10 +1,7 @@
-/*****************************************************************************************
-*                                      vga_graphics.h
-******************************************************************************************
-* AUTHOR: Jon Ayerdi
-*
-* DESCRIPTION: Implementation of VGA graphics for the ZYBO 7000 board
-*
+/*************************************************************************************//**
+* @file vga_graphics.c
+* @brief Implementation of VGA graphics for the ZYBO 7000 board
+* @author Jon Ayerdi
 *****************************************************************************************/
 #ifndef SRC_HAL_VGA_GRAPHICS_H_
 #define SRC_HAL_VGA_GRAPHICS_H_

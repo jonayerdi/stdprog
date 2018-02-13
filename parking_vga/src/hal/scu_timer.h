@@ -1,10 +1,7 @@
-/*****************************************************************************************
-*                                      scu_timer.h
-******************************************************************************************
-* AUTHOR: Jon Ayerdi
-*
-* DESCRIPTION: Implementation of SCU timer for the ZYBO 7000 board
-*
+/*************************************************************************************//**
+* @file scu_timer.h
+* @brief Implementation of SCU timer for the ZYBO 7000 board
+* @author Jon Ayerdi
 *****************************************************************************************/
 #ifndef SRC_HAL_SCU_TIMER_H_
 #define SRC_HAL_SCU_TIMER_H_

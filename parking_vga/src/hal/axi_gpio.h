@@ -1,10 +1,7 @@
-/*****************************************************************************************
-*                                      axi_gpio.h
-******************************************************************************************
-* AUTHOR: Jon Ayerdi
-*
-* DESCRIPTION: Implementation of AXI GPIOs for the ZYBO 7000 board
-*
+/*************************************************************************************//**
+* @file axi_gpio.h
+* @brief Implementation of AXI GPIOs for the ZYBO 7000 board
+* @author Jon Ayerdi
 *****************************************************************************************/
 #ifndef SRC_HAL_AXI_GPIO_H_
 #define SRC_HAL_AXI_GPIO_H_

@@ -1,10 +1,7 @@
-/*****************************************************************************************
-*                                   graphics_config.h
-******************************************************************************************
-* AUTHOR: Jon Ayerdi
-*
-* DESCRIPTION: Mapping of graphics implementations to their names
-*
+/*************************************************************************************//**
+* @file graphics_config.h
+* @brief Mapping of graphics implementations to their names
+* @author Jon Ayerdi
 *****************************************************************************************/
 #ifndef SRC_CONFIG_GRAPHICS_CONFIG_H_
 #define SRC_CONFIG_GRAPHICS_CONFIG_H_

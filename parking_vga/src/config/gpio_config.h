@@ -1,10 +1,7 @@
-/*****************************************************************************************
-*                                    gpio_config.h
-******************************************************************************************
-* AUTHOR: Jon Ayerdi
-*
-* DESCRIPTION: Mapping of gpio implementations to their names
-*
+/*************************************************************************************//**
+* @file gpio_config.h
+* @brief Mapping of gpio implementations to their names
+* @author Jon Ayerdi
 *****************************************************************************************/
 #ifndef SRC_CONFIG_GPIO_CONFIG_H_
 #define SRC_CONFIG_GPIO_CONFIG_H_

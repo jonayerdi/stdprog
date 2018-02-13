@@ -1,10 +1,7 @@
-/*****************************************************************************************
-*                                   timer_config.h
-******************************************************************************************
-* AUTHOR: Jon Ayerdi
-*
-* DESCRIPTION: Mapping of timer implementations
-*
+/*************************************************************************************//**
+* @file timer_config.h
+* @brief Mapping of timer implementations
+* @author Jon Ayerdi
 *****************************************************************************************/
 #ifndef SRC_CONFIG_TIMER_CONFIG_H_
 #define SRC_CONFIG_TIMER_CONFIG_H_

@@ -1,10 +1,7 @@
-/*****************************************************************************************
-*                                      gpiops_gpio.h
-******************************************************************************************
-* AUTHOR: Jon Ayerdi
-*
-* DESCRIPTION: Implementation of MIO/EMIO GPIOs for the ZYBO 7000 board
-*
+/*************************************************************************************//**
+* @file gpiops_gpio.h
+* @brief Implementation of MIO/EMIO GPIOs for the ZYBO 7000 board
+* @author Jon Ayerdi
 *****************************************************************************************/
 #ifndef SRC_HAL_GPIOPS_GPIO_H_
 #define SRC_HAL_GPIOPS_GPIO_H_

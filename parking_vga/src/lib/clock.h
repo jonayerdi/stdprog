@@ -1,10 +1,7 @@
-/*****************************************************************************************
-*                                         clock.h
-******************************************************************************************
-* AUTHOR: Jon Ayerdi
-*
-* DESCRIPTION: Defines macros for time conversion and manipulation
-*
+/*************************************************************************************//**
+* @file clock.h
+* @brief Defines macros for time conversion and manipulation
+* @author Jon Ayerdi
 *****************************************************************************************/
 #ifndef SRC_LIB_CLOCK_H_
 #define SRC_LIB_CLOCK_H_
