@@ -5,6 +5,8 @@ Makefile
 !*/src/**/*.c
 !*/README.txt
 !*/README_DOXYGEN.txt
+!*/apparking_logo.png
+!*/parking_state_machine.png
 platform_config.h
 platform.h
 platform.c

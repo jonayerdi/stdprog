@@ -1,10 +1,8 @@
-/*****************************************************************************************
-*                             parking_spot_state_machine.h
-******************************************************************************************
-* AUTHOR: Jon Ayerdi
-*
-* DESCRIPTION: State machine of a parking spot.
-*
+/*************************************************************************************//**
+* @file parking_spot_state_machine.h
+* @brief State machine of a parking spot
+* @image html parking_state_machine.png
+* @author Jon Ayerdi
 *****************************************************************************************/
 #ifndef SRC_DOMAIN_PARKING_SPOT_STATE_MACHINE_H_
 #define SRC_DOMAIN_PARKING_SPOT_STATE_MACHINE_H_

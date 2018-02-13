@@ -1,9 +1,8 @@
-/*
- * main.c
- *
- *  Created on: 15 Nov 2017
- *      Author: Jon Ayerdi
- */
+/*************************************************************************************//**
+* @file main.c
+* @brief Entry point for the parking application
+* @author Jon Ayerdi
+*****************************************************************************************/
 
 #include "config/logger.h"
 #include "config/timer_config.h"
