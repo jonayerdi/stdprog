@@ -4,6 +4,7 @@ Makefile
 !*/src/**/*.h
 !*/src/**/*.c
 !*/README.txt
+!*/README_DOXYGEN.txt
 platform_config.h
 platform.h
 platform.c
