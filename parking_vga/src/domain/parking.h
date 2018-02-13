@@ -73,7 +73,7 @@ typedef struct parking
  *  @return 0 (OK) or nonzero (error).
  */
 int parking_init(parking_t *output, const char *config_filename);
-/** @brief initializes the parking structure.
+/** @brief executes a step of the parking state machines.
  *  @param input the parking.
  *  @param time_diff elapsed milliseconds since previous call to parking_step.
  *  @return 0 (OK) or nonzero (error).
