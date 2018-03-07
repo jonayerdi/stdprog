@@ -10,5 +10,7 @@ Makefile
 platform_config.h
 platform.h
 platform.c
+!parking_vga/.project
+!parking_vga/.cproject
 !parking_vga/parking.json
 parking_vga_bootloader
