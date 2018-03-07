@@ -10,7 +10,10 @@ Makefile
 platform_config.h
 platform.h
 platform.c
+!parking_vga/build_win32.bat
 !parking_vga/.project
 !parking_vga/.cproject
 !parking_vga/parking.json
+!parking_vga/parking.bmp
 parking_vga_bootloader
+SDL2
