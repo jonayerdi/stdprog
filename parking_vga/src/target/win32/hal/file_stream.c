@@ -74,8 +74,8 @@ int file_output_stream(output_stream_t *stream, const char *filename)
 	if(file == NULL)
 		return 1;
 	/* Implement input_stream_t */
-	stream->read = _read;
-	stream->discard = _discard;
+	stream->write = _write;
+	stream->flush = _flush;
 	stream->close = _close;
 	stream->context = file;
 	return 0;
