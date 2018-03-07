@@ -45,7 +45,7 @@ inline void *memory_allocate(size_t size)
 
 inline void memory_free(void *ptr)
 {
-	return free(ptr);
+	free(ptr);
 }
 
 #endif /* MEMORY_NO_HEAP */
