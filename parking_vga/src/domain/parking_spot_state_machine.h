@@ -22,7 +22,7 @@
 #define GPIO_VALUE_FREE ((gpio_value_t)0)
 #define GPIO_VALUE_TAKEN ((gpio_value_t)1)
 
-#define TIMEOUT_TRANSITION 4
+#define TIMEOUT_TRANSITION 3
 
 /*--------------------------------------------------------------------------------------*/
 /*                                        TYPES                                         */
