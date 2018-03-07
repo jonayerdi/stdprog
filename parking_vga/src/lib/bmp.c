@@ -66,6 +66,8 @@ int bmp_load(input_stream_t input, image_t *output)
 			read = stream_read(input, (char *)&output->pixels[((output->y - y - 1) * output->x) + (x)], header.info_header.bits_per_pixel / 8);
 			if(read != (header.info_header.bits_per_pixel / 8))
 				return BMP_STATE_ERROR_STREAM;
+			//Make pixel opaque
+			output->pixels[((output->y - y - 1) * output->x) + (x)] |= PIXEL_ALPHA;
 		}
 		//Read row alignment bytes
 		size_t remain = (output->x * header.info_header.bits_per_pixel / 8) % 4;

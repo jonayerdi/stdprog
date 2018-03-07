@@ -16,20 +16,36 @@
 /*                            		 PRIVATE FUNCTIONS                                  */
 /*--------------------------------------------------------------------------------------*/
 
-static pixel_t *_get_vbuffer(void *context);
-static void _flush_vbuffer(void *context);
+static int _get_surface(void *context, image_t *surface, size_t x1, size_t y1, size_t x2, size_t y2);
+static void _update(void *context, size_t x1, size_t y1, size_t x2, size_t y2);
+static void _render(void *context);
 static void _destroy(void *context);
 
-static pixel_t *_get_vbuffer(void *context)
+static int _get_surface(void *context, image_t *surface, size_t x1, size_t y1, size_t x2, size_t y2)
 {
 	vga_graphics_t *vga = ((vga_graphics_t *)context);
-	return vga->vbuffer;
+	if(x1>x2 || y1>y2 || x2>=vga->mode.width || y2>=vga->mode.height)
+		return GRAPHICS_ERROR_OUT_OF_BOUNDS;
+	surface->pixels = &vga->vbuffer[(y1 * vga->mode.width) + x1];
+	surface->x = x2 - x1;
+	surface->y = y2 - y1;
+	surface->stride = vga->mode.width;
+	return GRAPHICS_OK;
 }
 
-static void _flush_vbuffer(void *context)
+static void _update(void *context, size_t x1, size_t y1, size_t x2, size_t y2)
 {
 	vga_graphics_t *vga = ((vga_graphics_t *)context);
-	memcpy(vga->framebuffers[(size_t)vga->current_frame], vga->vbuffer, sizeof(pixel_t) * vga->mode.width * vga->mode.height);
+	size_t x = x2 - x1 + 1;
+	for(size_t frame = 0 ; frame < DISPLAY_NUM_FRAMES ; frame++)
+		for(size_t y = y1 ; y <= y2 ; y++)
+			memcpy(&(vga->framebuffers[frame][(y*vga->mode.width) + x1]), &vga->vbuffer[(y*vga->mode.width) + x1], sizeof(pixel_t) * x);
+}
+
+static void _render(void *context)
+{
+	vga_graphics_t *vga = ((vga_graphics_t *)context);
+	//memcpy(vga->framebuffers[(size_t)vga->current_frame], vga->vbuffer, sizeof(pixel_t) * vga->mode.width * vga->mode.height);
 	DisplayChangeFrame(&vga->driver, vga->current_frame);
 	vga->current_frame = (vga->current_frame + 1) % DISPLAY_NUM_FRAMES;
 }
@@ -95,8 +111,9 @@ int vga_graphics_init(graphics_t *output, vga_graphics_config_t config)
 	status = DisplayStart(&context->driver);
 	/* Implement output interface */
 	output->context = context;
-	output->get_vbuffer = _get_vbuffer;
-	output->flush_vbuffer = _flush_vbuffer;
+	output->get_surface = _get_surface;
+	output->render = _render;
+	output->update = _update;
 	output->destroy = _destroy;
 	output->x = context->mode.width;
 	output->y = context->mode.height;

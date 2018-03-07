@@ -71,12 +71,20 @@ static int _parking_spot_step(parking_spot_t *input, timestamp_t time)
 	if(gpio_get(input->forced_source) == GPIO_VALUE_TAKEN)
 	{
 		input->mode = parking_spot_mode_forced;
-		input->state_machine.estado_actual = parking_state_taken;
+		if(input->state_machine.estado_actual != parking_state_taken)
+		{
+			input->state_machine.estado_actual = parking_state_taken;
+			input->timestamp = time;
+		}
 	}
 	else if(input->mode == parking_spot_mode_forced)
 	{
 		input->mode = parking_spot_mode_normal;
-		input->state_machine.estado_actual = parking_state_unknown;
+		if(input->state_machine.estado_actual != parking_state_unknown)
+		{
+			input->state_machine.estado_actual = parking_state_unknown;
+			input->timestamp = time;
+		}
 	}
 	//State machine
 	STATE_MACHINE_ejecutar(&input->state_machine);
@@ -104,7 +112,8 @@ static void _parking_spot_render(graphics_t graphics, parking_spot_t input)
 			color = COLOR_PARKING_STATE_UNKNOWN;
 			break;
 	}
-	graphics_draw_rect(graphics, color, input.x1, input.y1, input.x2, input.y2);
+	graphics_draw_rect(graphics, color, input.x1, input.y1, input.x2, input.y2, compositing_mode_alpha);
+	graphics_update(graphics, input.x1, input.y1, input.x2, input.y2);
 }
 
 static void _parking_spot_destroy(parking_spot_t *input)
@@ -169,6 +178,9 @@ int parking_init(parking_t *output, const char *config_filename)
 	json_free_object(&allocator, parking);
 	//Destroy config input stream
 	stream_close_input(config_file);
+	//Render background image once
+	graphics_draw_image(output->graphics, output->background_image, 0, 0, compositing_mode_binary);
+	graphics_update(output->graphics, 0, 0, output->background_image.x - 1, output->background_image.y - 1);
 	return 0;
 }
 
@@ -182,9 +194,10 @@ int parking_step(parking_t *input, timestamp_t time_diff)
 
 void parking_render(parking_t input)
 {
-	graphics_draw_image(input.graphics, input.background_image, 0, 0);
+	graphics_draw_image(input.graphics, input.background_image, 0, 0, compositing_mode_binary);
 	for(size_t i = 0 ; i < input.count ; i++)
-		_parking_spot_render(input.graphics, input.spots[i]);
+		if(input.spots[i].timestamp == input.time) /* Parking spot state has changed */
+			_parking_spot_render(input.graphics, input.spots[i]);
 	graphics_render(input.graphics);
 }
 

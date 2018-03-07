@@ -15,6 +15,25 @@
 /*                             PUBLIC FUNCTION DEFINITIONS                              */
 /*--------------------------------------------------------------------------------------*/
 
+inline void pixel_compositing(pixel_t *target, pixel_t value, compositing_mode_t mode)
+{
+	switch(mode)
+	{
+		case compositing_mode_binary:
+			pixel_binary_compositing(target, value);
+			break;
+		case compositing_mode_alpha:
+			pixel_alpha_compositing(target, value);
+			break;
+	}
+}
+
+inline void pixel_binary_compositing(pixel_t *target, pixel_t value)
+{
+	if(value & PIXEL_ALPHA)
+		*target = value;
+}
+
 inline void pixel_alpha_compositing(pixel_t *target, pixel_t value)
 {
 	pixel_t oldvalue = *target;

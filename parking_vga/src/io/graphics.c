@@ -12,100 +12,119 @@
 #include "lib/font8x8.h"
 
 #include <string.h> /* strlen */
+#include <stdlib.h>
 
 /*--------------------------------------------------------------------------------------*/
 /*                             PUBLIC FUNCTION DEFINITIONS                              */
 /*--------------------------------------------------------------------------------------*/
 
-inline void graphics_draw_char8x8(graphics_t graphics, char character, pixel_t color, size_t x, size_t y)
+inline void graphics_draw_char8x8(graphics_t graphics, char character, pixel_t color, size_t x, size_t y, compositing_mode_t mode)
 {
 	char string[2];
 	string[0] = character;
 	string[1] = '\0';
-	graphics_draw_string8x8(graphics, string, color, x, y);
+	graphics_draw_string8x8(graphics, string, color, x, y, mode);
 }
 
-void graphics_draw_string8x8(graphics_t graphics, char *string, pixel_t color, size_t x, size_t y)
-{
-	/* Declare variables */
-	size_t string_length = strlen(string);
-
-	/* Get vbuffer */
-	pixel_t *vbuffer = graphics.get_vbuffer(graphics.context);
-
-	/* Set pixel color*/
-	for(size_t pixel_y = 0 ; pixel_y < 8 ; pixel_y++)
-		for(size_t character = 0 ; character < string_length ; character++)
-			for(size_t pixel_x = 0 ; pixel_x < 8 ; pixel_x++)
-			{
-				size_t pos_x = x + (8 * character) + pixel_x;
-				if(pos_x >= graphics.x) /* Check horizontal out of bounds */
-				{
-					character = string_length; /* Skip to next vertical position (outer loop) */
-					break;
-				}
-				size_t pos_y = y + pixel_y;
-				if(pos_y >= graphics.y) /* Check vertical out of bounds */
-					return; /* Everything else is out of bounds */
-				pixel_alpha_compositing(&vbuffer[(pos_y * graphics.x) + pos_x]
-					,(font8x8[(size_t)string[character]][pixel_y] & (1 << pixel_x)) ? color : PIXEL_INVISIBLE);
-			}
-}
-
-void graphics_draw_rect(graphics_t graphics, pixel_t color, size_t x1, size_t y1, size_t x2, size_t y2)
-{
-	/* Get vbuffer */
-	pixel_t *vbuffer = graphics.get_vbuffer(graphics.context);
-
-	/* Compute bounds */
-	size_t end_x = x2 > graphics.x ? graphics.x : x2;
-	size_t end_y = y2 > graphics.y ? graphics.y : y2;
-
-	/* Set pixel color */
-	for(size_t pixel_y = y1 ; pixel_y < end_y ; pixel_y++)
-		for(size_t pixel_x = x1 ; pixel_x < end_x ; pixel_x++)
-			pixel_alpha_compositing(&vbuffer[(pixel_y * graphics.x) + (pixel_x)], color);
-}
-
-void graphics_draw_circle(graphics_t graphics, pixel_t color, size_t x, size_t y, size_t radius)
+void graphics_draw_string8x8(graphics_t graphics, char *string, pixel_t color, size_t x, size_t y, compositing_mode_t mode)
 {
 	/* Precompute constants */
-	size_t diameter = (radius * 2) + 1;
-	int sradius = (int)radius;
-	int radius2 = ((int)radius * (int)radius);
+	size_t string_length = strlen(string);
 
-	/* Get vbuffer */
-	pixel_t *vbuffer = graphics.get_vbuffer(graphics.context);
+	/* Get surface */
+	image_t surface;
+	if(graphics.get_surface(graphics.context, &surface, x, y, x + (8 * string_length) - 1, y + 8 - 1) != GRAPHICS_OK)
+		return;
 
-	/* Set pixel color */
-	for(int pixel_y = 0 ; pixel_y < (int)diameter ; pixel_y++)
-		for(int pixel_x = 0 ; pixel_x < (int)diameter ; pixel_x++)
+	/* Render into surface */
+	for(size_t pixel_y = 0 ; pixel_y < 8 ; pixel_y++)
+	{
+		for(size_t character = 0 ; character < string_length ; character++)
 		{
-			int dist_x2 = ((pixel_x - sradius) * (pixel_x - sradius));
-			int dist_y2 = ((pixel_y - sradius) * (pixel_y - sradius));
-			pixel_alpha_compositing(&vbuffer[((y + pixel_y) * graphics.x) + (x + pixel_x)]
-				, ((dist_x2 + dist_y2) <= radius2) ? color : PIXEL_INVISIBLE);
+			for(size_t pixel_x = 0 ; pixel_x < 8 ; pixel_x++)
+			{
+				size_t pos_x = (8 * character) + pixel_x;
+				size_t pos_y = pixel_y;
+				pixel_compositing(
+					&surface.pixels[(pos_y * surface.stride) + pos_x]
+					, (font8x8[(size_t)string[character]][pixel_y] & (1 << pixel_x)) ? color : PIXEL_INVISIBLE
+					, mode);
+			}
 		}
+	}
 }
 
-inline void graphics_draw_image(graphics_t graphics, image_t image, size_t x, size_t y)
+void graphics_draw_rect(graphics_t graphics, pixel_t color, size_t x1, size_t y1, size_t x2, size_t y2, compositing_mode_t mode)
 {
-	/* Get vbuffer */
-	pixel_t *vbuffer = graphics.get_vbuffer(graphics.context);
+	/* Precompute constants */
+	size_t len_x = x2 - x1;
+	size_t len_y = y2 - y1;
 
-	/* Compute bounds */
-	size_t end_x = (x + image.x) > graphics.x ? graphics.x - x : image.x;
-	size_t end_y = (y + image.y) > graphics.y ? graphics.y - y : image.y;
+	/* Get surface */
+	image_t surface;
+	if(graphics.get_surface(graphics.context, &surface, x1, y1, x2, y2) != GRAPHICS_OK)
+		return;
 
-	/* Set pixel color */
-	for(size_t pixel_y = 0 ; pixel_y < end_y ; pixel_y++)
-		for(size_t pixel_x = 0 ; pixel_x < end_x ; pixel_x++)
-			vbuffer[((y + pixel_y) * graphics.x) + (x + pixel_x)] = image.pixels[((pixel_y) * image.stride) + (pixel_x)];
+	/* Render into surface */
+	for(size_t pos_y = 0 ; pos_y < len_y ; pos_y++)
+		for(size_t pos_x = 0 ; pos_x < len_x ; pos_x++)
+			pixel_compositing(
+					&surface.pixels[(pos_y * surface.stride) + pos_x]
+					, color
+					, mode);
+}
+
+void graphics_draw_circle(graphics_t graphics, pixel_t color, size_t x, size_t y, size_t radius, compositing_mode_t mode)
+{
+	/* Precompute constants */
+	int sradius = (int)radius;
+	int radius2 = ((int)radius * (int)radius);
+	int diameter = (sradius * 2) + 1;
+
+	/* Get surface */
+	image_t surface;
+	if(graphics.get_surface(graphics.context, &surface, x, y, x + diameter - 1, y + diameter - 1) != GRAPHICS_OK)
+		return;
+
+	/* Render into surface */
+	for(int pos_y = 0 ; pos_y < diameter ; pos_y++)
+	{
+		for(int pos_x = 0 ; pos_x < diameter ; pos_x++)
+		{
+			int dist_x2 = ((pos_x - sradius) * (pos_x - sradius));
+			int dist_y2 = ((pos_y - sradius) * (pos_y - sradius));
+			pixel_compositing(
+					&surface.pixels[(pos_y * surface.stride) + pos_x]
+					, ((dist_x2 + dist_y2) <= radius2) ? color : PIXEL_INVISIBLE
+					, mode);
+		}
+	}
+}
+
+inline void graphics_draw_image(graphics_t graphics, image_t image, size_t x, size_t y, compositing_mode_t mode)
+{
+	/* Get surface */
+	image_t surface;
+	if(graphics.get_surface(graphics.context, &surface, x, y, x + image.x - 1, y + image.y - 1) != GRAPHICS_OK)
+		return;
+
+	/* Render into surface */
+	for(size_t pos_y = 0 ; pos_y < image.y ; pos_y++)
+		for(size_t pos_x = 0 ; pos_x < image.x ; pos_x++)
+			pixel_compositing(
+					&surface.pixels[(pos_y * surface.stride) + pos_x]
+					, image.pixels[((pos_y) * image.stride) + (pos_x)]
+					, mode);
+}
+
+inline void graphics_update(graphics_t graphics, size_t x1, size_t y1, size_t x2, size_t y2)
+{
+	graphics.update(graphics.context, x1, y1, x2, y2);
 }
 
 inline void graphics_render(graphics_t graphics)
 {
-	graphics.flush_vbuffer(graphics.context);
+	graphics.render(graphics.context);
 }
 
 inline void graphics_destroy(graphics_t graphics)
