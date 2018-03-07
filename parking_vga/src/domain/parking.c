@@ -113,7 +113,6 @@ static void _parking_spot_render(graphics_t graphics, parking_spot_t input)
 			break;
 	}
 	graphics_draw_rect(graphics, color, input.x1, input.y1, input.x2, input.y2, compositing_mode_alpha);
-	graphics_update(graphics, input.x1, input.y1, input.x2, input.y2);
 }
 
 static void _parking_spot_destroy(parking_spot_t *input)
@@ -178,9 +177,6 @@ int parking_init(parking_t *output, const char *config_filename)
 	json_free_object(&allocator, parking);
 	//Destroy config input stream
 	stream_close_input(config_file);
-	//Render background image once
-	graphics_draw_image(output->graphics, output->background_image, 0, 0, compositing_mode_binary);
-	graphics_update(output->graphics, 0, 0, output->background_image.x - 1, output->background_image.y - 1);
 	return 0;
 }
 
@@ -196,8 +192,8 @@ void parking_render(parking_t input)
 {
 	graphics_draw_image(input.graphics, input.background_image, 0, 0, compositing_mode_binary);
 	for(size_t i = 0 ; i < input.count ; i++)
-		if(input.spots[i].timestamp == input.time) /* Parking spot state has changed */
-			_parking_spot_render(input.graphics, input.spots[i]);
+		_parking_spot_render(input.graphics, input.spots[i]);
+
 	graphics_render(input.graphics);
 }
 

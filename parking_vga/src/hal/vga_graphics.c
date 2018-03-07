@@ -17,7 +17,6 @@
 /*--------------------------------------------------------------------------------------*/
 
 static int _get_surface(void *context, image_t *surface, size_t x1, size_t y1, size_t x2, size_t y2);
-static void _update(void *context, size_t x1, size_t y1, size_t x2, size_t y2);
 static void _render(void *context);
 static void _destroy(void *context);
 
@@ -33,19 +32,10 @@ static int _get_surface(void *context, image_t *surface, size_t x1, size_t y1, s
 	return GRAPHICS_OK;
 }
 
-static void _update(void *context, size_t x1, size_t y1, size_t x2, size_t y2)
-{
-	vga_graphics_t *vga = ((vga_graphics_t *)context);
-	size_t x = x2 - x1 + 1;
-	for(size_t frame = 0 ; frame < DISPLAY_NUM_FRAMES ; frame++)
-		for(size_t y = y1 ; y <= y2 ; y++)
-			memcpy(&(vga->framebuffers[frame][(y*vga->mode.width) + x1]), &vga->vbuffer[(y*vga->mode.width) + x1], sizeof(pixel_t) * x);
-}
-
 static void _render(void *context)
 {
 	vga_graphics_t *vga = ((vga_graphics_t *)context);
-	//memcpy(vga->framebuffers[(size_t)vga->current_frame], vga->vbuffer, sizeof(pixel_t) * vga->mode.width * vga->mode.height);
+	memcpy(vga->framebuffers[(size_t)vga->current_frame], vga->vbuffer, sizeof(pixel_t) * vga->mode.width * vga->mode.height);
 	DisplayChangeFrame(&vga->driver, vga->current_frame);
 	vga->current_frame = (vga->current_frame + 1) % DISPLAY_NUM_FRAMES;
 }
@@ -113,7 +103,6 @@ int vga_graphics_init(graphics_t *output, vga_graphics_config_t config)
 	output->context = context;
 	output->get_surface = _get_surface;
 	output->render = _render;
-	output->update = _update;
 	output->destroy = _destroy;
 	output->x = context->mode.width;
 	output->y = context->mode.height;

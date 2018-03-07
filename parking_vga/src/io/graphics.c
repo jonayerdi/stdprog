@@ -117,11 +117,6 @@ inline void graphics_draw_image(graphics_t graphics, image_t image, size_t x, si
 					, mode);
 }
 
-inline void graphics_update(graphics_t graphics, size_t x1, size_t y1, size_t x2, size_t y2)
-{
-	graphics.update(graphics.context, x1, y1, x2, y2);
-}
-
 inline void graphics_render(graphics_t graphics)
 {
 	graphics.render(graphics.context);
