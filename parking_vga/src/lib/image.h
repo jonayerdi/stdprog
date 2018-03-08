@@ -77,6 +77,11 @@ int image_alloc(image_t *image, size_t x, size_t y);
  */
 void image_free(image_t *image);
 
+/*
+ * The microsoft compiler removes inlined functions from object files, so they must be defined here.
+ */
+#ifdef _MSC_VER
+
 /*--------------------------------------------------------------------------------------*/
 /*                             PUBLIC FUNCTION DEFINITIONS                              */
 /*--------------------------------------------------------------------------------------*/
@@ -110,6 +115,8 @@ inline void pixel_alpha_compositing(pixel_t *target, pixel_t value)
 	char b = (char)((((double)((oldvalue & PIXEL_BLUE))) * oldalpha) + (((double)((value & PIXEL_BLUE))) * alpha));
 	*target = (((pixel_t)r<<16) + ((pixel_t)g<<8) + ((pixel_t)b));
 }
+
+#endif /* _MSC_VER */
 
 #endif /* SRC_LIB_IMAGE_H_ */
 /****************************************************************************************
