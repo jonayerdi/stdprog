@@ -1,0 +1,101 @@
+{
+    "graphics": {
+        "device": "hdmi",
+        "mode": "800x600"
+    },
+    "layout": {
+        "background": "parking.bmp",
+        "spots": [
+            {
+                "id": 0,
+                "input_source": "button0",
+                "forced_source": "switch0",
+                "x1": 34,
+                "x2": 147,
+                "y1": 45,
+                "y2": 184
+            },
+            {
+                "id": 1,
+                "input_source": "button1",
+                "forced_source": "switch1",
+                "x1": 194,
+                "x2": 298,
+                "y1": 45,
+                "y2": 184
+            },
+            {
+                "id": 2,
+                "input_source": "button2",
+                "forced_source": "switch2",
+                "x1": 340,
+                "x2": 452,
+                "y1": 45,
+                "y2": 184
+            },
+            {
+                "id": 3,
+                "input_source": "button3",
+                "forced_source": "switch3",
+                "x1": 490,
+                "x2": 602,
+                "y1": 45,
+                "y2": 184
+            },
+            {
+                "id": 4,
+                "input_source": "button4",
+                "forced_source": "fixed0",
+                "x1": 650,
+                "x2": 762,
+                "y1": 45,
+                "y2": 184
+            },
+            {
+                "id": 5,
+                "input_source": "button5",
+                "forced_source": "fixed0",
+                "x1": 34,
+                "x2": 147,
+                "y1": 415,
+                "y2": 558
+            },
+            {
+                "id": 6,
+                "input_source": "fixed0",
+                "forced_source": "fixed0",
+                "x1": 194,
+                "x2": 298,
+                "y1": 415,
+                "y2": 558
+            },
+            {
+                "id": 7,
+                "input_source": "fixed1",
+                "forced_source": "fixed0",
+                "x1": 340,
+                "x2": 452,
+                "y1": 415,
+                "y2": 558
+            },
+            {
+                "id": 8,
+                "input_source": "fixed0",
+                "forced_source": "fixed0",
+                "x1": 490,
+                "x2": 602,
+                "y1": 415,
+                "y2": 558
+            },
+            {
+                "id": 9,
+                "input_source": "fixed1",
+                "forced_source": "fixed0",
+                "x1": 650,
+                "x2": 762,
+                "y1": 415,
+                "y2": 558
+            }
+        ]
+    }
+}

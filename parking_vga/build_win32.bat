@@ -8,8 +8,8 @@ set cfiles=.\src\*.c .\src\domain\*.c .\src\io\*.c .\src\lib\*.c .\src\target\wi
 
 mkdir %output_dir%
 
-copy /Y parking.json %output_dir%\parking.txt
+copy /Y parking_win32.json %output_dir%\parking.txt
 copy /Y parking.bmp %output_dir%
 copy /Y %sdldll% %output_dir%
 
-vcvarsall & cl /W3 /D_CRT_SECURE_NO_WARNINGS /GS /Gd /Zi /Od /Ob0 /MTd /TC %includes% /Fo: %output_dir%\ /Fe: %output_dir%\parking_vga.exe /Fd: %output_dir%\parking_vga.pdb %cfiles% & del %output_dir%\*.obj
+vcvarsall & cl /W3 /D_CRT_SECURE_NO_WARNINGS /GS /Gd /GL /Za /Zi /Od /Ob0 /MTd /TC %includes% /Fo: %output_dir%\ /Fe: %output_dir%\parking_vga.exe /Fd: %output_dir%\parking_vga.pdb %cfiles% & del %output_dir%\*.obj
