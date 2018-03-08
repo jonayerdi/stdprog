@@ -19,11 +19,38 @@
 #define BMP_INFO_HEADER_BITS_PER_PIXEL 24
 #define BMP_INFO_HEADER_COMPRESSION 0
 
+#define _BMP_READ(TARGET) { read = stream_read(input, &(TARGET), sizeof(TARGET)); if (read != sizeof(TARGET)) { return BMP_STATE_ERROR_STREAM; } }
+
 /*--------------------------------------------------------------------------------------*/
 /*                            		 PRIVATE FUNCTIONS                                  */
 /*--------------------------------------------------------------------------------------*/
 
+int _read_header(input_stream_t input, bmp_header_t *output);
 int _check_header(bmp_header_t header);
+
+int _read_header(input_stream_t input, bmp_header_t *output)
+{
+	size_t read;
+	//BMP file header
+	_BMP_READ(output->file_header.signature);
+	_BMP_READ(output->file_header.file_size);
+	_BMP_READ(output->file_header.reserved1);
+	_BMP_READ(output->file_header.reserved2);
+	_BMP_READ(output->file_header.data_offset);
+	//BMP info header
+	_BMP_READ(output->info_header.header_size);
+	_BMP_READ(output->info_header.image_width);
+	_BMP_READ(output->info_header.image_height);
+	_BMP_READ(output->info_header.color_planes);
+	_BMP_READ(output->info_header.bits_per_pixel);
+	_BMP_READ(output->info_header.compression);
+	_BMP_READ(output->info_header.image_size);
+	_BMP_READ(output->info_header.horizontal_resolution);
+	_BMP_READ(output->info_header.vertical_resolution);
+	_BMP_READ(output->info_header.palette_colors);
+	_BMP_READ(output->info_header.important_colors);
+	return BMP_STATE_OK;
+}
 
 int _check_header(bmp_header_t header)
 {
@@ -49,9 +76,9 @@ int bmp_load(input_stream_t input, image_t *output)
 	bmp_header_t header;
 	size_t read;
 	//Read and check BMP header
-	read = stream_read(input, (char *)&header, sizeof(bmp_header_t));
-	if(read != sizeof(bmp_header_t))
-		return BMP_STATE_ERROR_STREAM;
+	state = _read_header(input, &header);
+	if(state != BMP_STATE_OK)
+		return state;
 	state = _check_header(header);
 	if(state != BMP_STATE_OK)
 		return state;

@@ -32,7 +32,7 @@ typedef struct bmp_file_header
 	uint16_t reserved1;
 	uint16_t reserved2;
 	uint32_t data_offset;
-} __attribute__((packed)) bmp_file_header_t;
+} bmp_file_header_t;
 
 typedef struct bmp_info_header
 {
@@ -47,13 +47,13 @@ typedef struct bmp_info_header
 	uint32_t vertical_resolution;
 	uint32_t palette_colors;
 	uint32_t important_colors;
-} __attribute__((packed)) bmp_info_header_t;
+} bmp_info_header_t;
 
 typedef struct bmp_header
 {
 	bmp_file_header_t file_header;
 	bmp_info_header_t info_header;
-} __attribute__((packed)) bmp_header_t;
+} bmp_header_t;
 
 /*--------------------------------------------------------------------------------------*/
 /*                            PUBLIC FUNCTION DECLARATIONS                              */
