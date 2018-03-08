@@ -21,12 +21,12 @@ static output_stream_t _logger;
 /*                            PUBLIC FUNCTION DECLARATIONS                              */
 /*--------------------------------------------------------------------------------------*/
 
-inline void logger_init(void)
+void logger_init(void)
 {
 	stdio_output_stream(&_logger);
 }
 
-inline output_stream_t logger_get(void)
+output_stream_t logger_get(void)
 {
 	return _logger;
 }

@@ -13,7 +13,7 @@
 /*                            PUBLIC FUNCTION DECLARATIONS                              */
 /*--------------------------------------------------------------------------------------*/
 
-inline int timer_config_get_default(ttimer_t *out)
+int timer_config_get_default(ttimer_t *out)
 {
 	return 1;
 }

@@ -19,7 +19,7 @@
 #define BMP_INFO_HEADER_BITS_PER_PIXEL 24
 #define BMP_INFO_HEADER_COMPRESSION 0
 
-#define _BMP_READ(TARGET) { read = stream_read(input, &(TARGET), sizeof(TARGET)); if (read != sizeof(TARGET)) { return BMP_STATE_ERROR_STREAM; } }
+#define _BMP_READ(TARGET) { read = stream_read(input, (char *)(&(TARGET)), sizeof(TARGET)); if (read != sizeof(TARGET)) { return BMP_STATE_ERROR_STREAM; } }
 
 /*--------------------------------------------------------------------------------------*/
 /*                            		 PRIVATE FUNCTIONS                                  */

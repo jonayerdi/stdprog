@@ -26,7 +26,7 @@ static void _timer_handler(ttimer_t *timer)
 /*                             PUBLIC FUNCTION DEFINITIONS                              */
 /*--------------------------------------------------------------------------------------*/
 
-inline int timer_start(ttimer_t *timer, uint32_t freq, void(*callback)(ttimer_t timer))
+int timer_start(ttimer_t *timer, uint32_t freq, void(*callback)(ttimer_t timer))
 {
 	timer->callback = callback;
 	timer->freq = freq;
@@ -35,17 +35,17 @@ inline int timer_start(ttimer_t *timer, uint32_t freq, void(*callback)(ttimer_t 
 	return timer->start(freq, _timer_handler, timer->context);
 }
 
-inline void timer_stop(ttimer_t timer)
+void timer_stop(ttimer_t timer)
 {
 	timer.stop(timer.context);
 }
 
-inline timer_tick_t timer_get_ticks(ttimer_t timer)
+timer_tick_t timer_get_ticks(ttimer_t timer)
 {
 	return timer.ticks;
 }
 
-inline void timer_destroy(ttimer_t timer)
+void timer_destroy(ttimer_t timer)
 {
 	timer.destroy(timer.context);
 }

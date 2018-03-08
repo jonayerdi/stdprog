@@ -18,7 +18,7 @@
 /*                             PUBLIC FUNCTION DEFINITIONS                              */
 /*--------------------------------------------------------------------------------------*/
 
-inline void graphics_draw_char8x8(graphics_t graphics, char character, pixel_t color, size_t x, size_t y, compositing_mode_t mode)
+void graphics_draw_char8x8(graphics_t graphics, char character, pixel_t color, size_t x, size_t y, compositing_mode_t mode)
 {
 	char string[2];
 	string[0] = character;
@@ -101,7 +101,7 @@ void graphics_draw_circle(graphics_t graphics, pixel_t color, size_t x, size_t y
 	}
 }
 
-inline void graphics_draw_image(graphics_t graphics, image_t image, size_t x, size_t y, compositing_mode_t mode)
+void graphics_draw_image(graphics_t graphics, image_t image, size_t x, size_t y, compositing_mode_t mode)
 {
 	/* Get surface */
 	image_t surface;
@@ -117,12 +117,12 @@ inline void graphics_draw_image(graphics_t graphics, image_t image, size_t x, si
 					, mode);
 }
 
-inline void graphics_render(graphics_t graphics)
+void graphics_render(graphics_t graphics)
 {
 	graphics.render(graphics.context);
 }
 
-inline void graphics_destroy(graphics_t graphics)
+void graphics_destroy(graphics_t graphics)
 {
 	graphics.destroy(graphics.context);
 }

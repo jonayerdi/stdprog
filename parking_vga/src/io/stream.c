@@ -15,32 +15,32 @@
 /*                             PUBLIC FUNCTION DEFINITIONS                              */
 /*--------------------------------------------------------------------------------------*/
 
-void inline stream_close_input(input_stream_t stream)
+void stream_close_input(input_stream_t stream)
 {
 	stream.close(stream.context);
 }
 
-void inline stream_close_output(output_stream_t stream)
+void stream_close_output(output_stream_t stream)
 {
 	stream.close(stream.context);
 }
 
-void inline stream_discard(input_stream_t stream)
+void stream_discard(input_stream_t stream)
 {
 	stream.discard(stream.context);
 }
 
-void inline stream_flush(output_stream_t stream)
+void stream_flush(output_stream_t stream)
 {
 	stream.flush(stream.context);
 }
 
-size_t inline stream_read(input_stream_t stream, char *output, size_t length)
+size_t stream_read(input_stream_t stream, char *output, size_t length)
 {
 	return stream.read(output, length, stream.context);
 }
 
-size_t inline stream_write(output_stream_t stream, const char *input, size_t length)
+size_t stream_write(output_stream_t stream, const char *input, size_t length)
 {
 	return stream.write(input, length, stream.context);
 }
@@ -61,7 +61,7 @@ size_t stream_read_line(input_stream_t stream, char *output, size_t length)
 	return read;
 }
 
-size_t inline stream_write_string(output_stream_t stream, const char *input)
+size_t stream_write_string(output_stream_t stream, const char *input)
 {
 	return stream_write(stream, input, strlen(input));
 }
