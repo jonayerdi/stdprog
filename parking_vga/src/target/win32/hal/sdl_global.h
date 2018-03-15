@@ -1,25 +1,19 @@
 /*************************************************************************************//**
-* @file timer_config.c
-* @brief Mapping of timer implementations
+* @file sdl_global.h
+* @brief Centralized initialization of the SDL library
 * @author Jon Ayerdi
 *****************************************************************************************/
-
-/*--------------------------------------------------------------------------------------*/
-/*                                       INCLUDES                                       */
-/*--------------------------------------------------------------------------------------*/
-#include "config/timer_config.h"
-
-#include "hal/sdl_timer.h"
+#ifndef SRC_HAL_SDL_GLOBAL_H_
+#define SRC_HAL_SDL_GLOBAL_H_
 
 /*--------------------------------------------------------------------------------------*/
 /*                            PUBLIC FUNCTION DECLARATIONS                              */
 /*--------------------------------------------------------------------------------------*/
 
-int timer_config_get_default(ttimer_t *out)
-{
-	return sdl_timer_init(out);
-}
+int sdl_init_if_needed(void);
+
+#endif /* SRC_HAL_SDL_GLOBAL_H_ */
 
 /*****************************************************************************************
-*                                   timer_config.c
+*                                      sdl_global.h
 *****************************************************************************************/
