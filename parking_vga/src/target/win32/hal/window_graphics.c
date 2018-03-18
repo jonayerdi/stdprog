@@ -10,6 +10,8 @@
 
 #include "hal/window_graphics.h"
 
+#include "hal/sdl_global.h"
+
 #include "io/memory.h"
 
 /*--------------------------------------------------------------------------------------*/
@@ -23,7 +25,7 @@ static void _destroy(void *context);
 static int _get_surface(void *context, image_t *surface, size_t x1, size_t y1, size_t x2, size_t y2)
 {
     window_graphics_t *window_graphics = ((window_graphics_t *)context);
-	if(x1>x2 || y1>y2 || x2>=window_graphics->config.x || y2>=vga->window_graphics->config.y)
+	if(x1>x2 || y1>y2 || x2>=window_graphics->config.x || y2>=window_graphics->config.y)
 		return GRAPHICS_ERROR_OUT_OF_BOUNDS;
 	surface->pixels = &window_graphics->vbuffer[(y1 * window_graphics->config.x) + x1];
 	surface->x = x2 - x1;
@@ -44,19 +46,18 @@ static void _render(void *context)
                                       (Uint32)PIXEL_GREEN,
                                       (Uint32)PIXEL_BLUE,
                                       (Uint32)0);
-    SDL_Surface *window_surface = SDL_GetWindowSurface(SDL_Window* window);
+    SDL_Surface *window_surface = SDL_GetWindowSurface(window_graphics->window);
     if(vbuffer_surface != NULL && window_surface != NULL)
     {
         SDL_BlitSurface(vbuffer_surface, NULL, window_surface, NULL);
         SDL_FreeSurface(vbuffer_surface);
-        SDL_UpdateWindowSurface(window);
+        SDL_UpdateWindowSurface(window_graphics->window);
     }
 }
 
 static void _destroy(void *context)
 {
     window_graphics_t *window_graphics = (window_graphics_t *)context;
-    SDL_DestroyRenderer(window_graphics->renderer);
     SDL_DestroyWindow(window_graphics->window);
     memory_free(window_graphics->vbuffer);
     memory_free(window_graphics);
@@ -89,7 +90,7 @@ int window_graphics_init(graphics_t *output, window_graphics_config_t config)
 	{
         memory_free(window_graphics->vbuffer);
         memory_free(window_graphics);
-        return (int)SDL_GetError());
+        return (int)SDL_GetError();
     }
     /* Implement output interface */
 	output->context = window_graphics;

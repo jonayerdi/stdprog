@@ -64,7 +64,7 @@ static int _sdl_timer_thread(void *context)
 /*                             PUBLIC FUNCTION DEFINITIONS                              */
 /*--------------------------------------------------------------------------------------*/
 
-int scu_timer_init(ttimer_t *output)
+int sdl_timer_init(ttimer_t *output)
 {
     //Init SDL if needed
     int status = sdl_init_if_needed();
@@ -76,7 +76,7 @@ int scu_timer_init(ttimer_t *output)
 		return MEMORY_ERROR;
     sdl_timer->timer = output;
 	//Implement timer interface
-	output->context = (void *)sdl_timer_t;
+	output->context = (void *)sdl_timer;
 	output->start = _start;
 	output->stop = _stop;
 	output->destroy = _destroy;

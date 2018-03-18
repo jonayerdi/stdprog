@@ -26,7 +26,7 @@
 
 int graphics_config_get(graphics_t *output, const char *device_name, const char *mode_name)
 {
-	window_graphics_config_t config = { .title = device_name, x = 0, y = 0 };
+	window_graphics_config_t config = { .title = "", .x = 0, .y = 0 };
 	GRAPHICS_CONFIG_MAP_MODE("640x480", 640, 480);
 	GRAPHICS_CONFIG_MAP_MODE("800x600", 800, 600);
 	GRAPHICS_CONFIG_MAP_MODE("1280x720", 1280, 720);
