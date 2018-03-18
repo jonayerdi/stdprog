@@ -6,6 +6,7 @@
 
 #include "config/logger.h"
 #include "config/timer_config.h"
+#include "config/idle_loop.h"
 
 #include "domain/parking.h"
 
@@ -82,5 +83,5 @@ int main(void)
 
 	/* Demo started */
 	LOG("[done] Starting application\n");
-	for(;;);
+	idle_loop();
 }
