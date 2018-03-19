@@ -193,7 +193,6 @@ void parking_render(parking_t input)
 	graphics_draw_image(input.graphics, input.background_image, 0, 0, compositing_mode_binary);
 	for(size_t i = 0 ; i < input.count ; i++)
 		_parking_spot_render(input.graphics, input.spots[i]);
-
 	graphics_render(input.graphics);
 }
 
