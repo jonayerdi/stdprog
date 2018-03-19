@@ -25,6 +25,9 @@ void idle_loop(void)
         {
             if(event.type == SDL_QUIT)
             {
+                /**
+                 * @todo Also stop SDL threads somehow
+                 */
                 stop = 1;
             }
         }

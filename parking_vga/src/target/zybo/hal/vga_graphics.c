@@ -34,6 +34,9 @@ static int _get_surface(void *context, image_t *surface, size_t x1, size_t y1, s
 
 static void _render(void *context)
 {
+	/**
+	 * @todo Remove vbuffer and have _get_surface() return a surface from framebuffers[current_frame]
+	 */
 	vga_graphics_t *vga = ((vga_graphics_t *)context);
 	memcpy(vga->framebuffers[(size_t)vga->current_frame], vga->vbuffer, sizeof(pixel_t) * vga->mode.width * vga->mode.height);
 	DisplayChangeFrame(&vga->driver, vga->current_frame);
