@@ -9,6 +9,8 @@
 /*--------------------------------------------------------------------------------------*/
 #include "config/idle_loop.h"
 
+#include "hal/sdl_timer.h"
+
 #include "SDL.h"
 
 /*--------------------------------------------------------------------------------------*/
@@ -25,9 +27,7 @@ void idle_loop(void)
         {
             if(event.type == SDL_QUIT)
             {
-                /**
-                 * @todo Also stop SDL threads somehow
-                 */
+                sdl_timer_stop_all();
                 stop = 1;
             }
         }

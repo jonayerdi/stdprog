@@ -15,6 +15,11 @@
 #include "hal/sdl_global.h"
 
 /*--------------------------------------------------------------------------------------*/
+/*                                   GLOBAL VARIABLES                                   */
+/*--------------------------------------------------------------------------------------*/
+static volatile char _stop_all = 0;
+
+/*--------------------------------------------------------------------------------------*/
 /*                            		 PRIVATE FUNCTIONS                                  */
 /*--------------------------------------------------------------------------------------*/
 
@@ -52,7 +57,7 @@ static int _sdl_timer_thread(void *context)
 {
     volatile sdl_timer_t *sdl_timer = (sdl_timer_t *)context;
     uint32_t step = 1000/sdl_timer->timer->freq;
-    while(!sdl_timer->stop)
+    while(!sdl_timer->stop && !_stop_all)
     {
         sdl_timer->timer_handler(sdl_timer->timer);
         SDL_Delay(step);
@@ -81,6 +86,11 @@ int sdl_timer_init(ttimer_t *output)
 	output->stop = _stop;
 	output->destroy = _destroy;
 	return 0;
+}
+
+void sdl_timer_stop_all(void)
+{
+    _stop_all = 1;
 }
 
 /*****************************************************************************************

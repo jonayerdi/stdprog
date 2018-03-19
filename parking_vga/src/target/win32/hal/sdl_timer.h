@@ -36,6 +36,10 @@ typedef struct sdl_timer
  */
 int sdl_timer_init(ttimer_t *output);
 
+/** @brief stops all sdl_timer instances. This prevents new sdl_timer instances from working. Use on application exit.
+ */
+void sdl_timer_stop_all(void);
+
 #endif /* SRC_HAL_SDL_TIMER_H_ */
 
 /*****************************************************************************************
