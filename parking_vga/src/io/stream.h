@@ -10,6 +10,7 @@
 /*                                       INCLUDES                                       */
 /*--------------------------------------------------------------------------------------*/
 #include <stddef.h> /* size_t */
+#include <stdint.h> /* uint32_t */
 
 /*--------------------------------------------------------------------------------------*/
 /*                                        TYPES                                         */
@@ -81,6 +82,12 @@ size_t stream_read_line(input_stream_t stream, char *output, size_t length);
  *  @return number of bytes written.
  */
 size_t stream_write_string(output_stream_t stream, const char *input);
+/** @brief writes a 32 bit integer to the given stream.
+ *  @param stream the stream to write.
+ *  @param input integer to send.
+ *  @return number of bytes written.
+ */
+size_t stream_write32(output_stream_t stream, uint32_t input);
 
 #endif /* SRC_IO_STREAM_H_ */
 

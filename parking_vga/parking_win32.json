@@ -1,9 +1,13 @@
 {
+    "connection": {
+        "name": "127.0.0.1:6969"
+    },
     "graphics": {
         "device": "hdmi",
         "mode": "800x600"
     },
     "layout": {
+        "id": 1,
         "background": "parking.bmp",
         "spots": [
             {

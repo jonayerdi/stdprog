@@ -14,6 +14,7 @@
 
 #include "io/graphics.h" /* graphics_t */
 #include "io/gpio.h" /* gpio_input_t */
+#include "io/stream.h" /* input_stream_t, output_stream_t */
 
 #include "lib/clock.h" /* clock_t */
 #include "lib/image.h" /* image_t */
@@ -25,10 +26,11 @@
 
 #define PARKING_ERROR_CONFIG_STREAM	 	0x01
 #define PARKING_ERROR_CONFIG_PARSE 		0x02
-#define PARKING_ERROR_INIT_GRAPHICS 	0x03
-#define PARKING_ERROR_IMAGE_STREAM 		0x04
-#define PARKING_ERROR_IMAGE_PARSE 		0x05
-#define PARKING_ERROR_CONFIG_SPOT		0x06
+#define PARKING_ERROR_INIT_CONNECTION 	0x03
+#define PARKING_ERROR_INIT_GRAPHICS 	0x04
+#define PARKING_ERROR_IMAGE_STREAM 		0x05
+#define PARKING_ERROR_IMAGE_PARSE 		0x06
+#define PARKING_ERROR_CONFIG_SPOT		0x07
 
 /*--------------------------------------------------------------------------------------*/
 /*                                        TYPES                                         */
@@ -56,9 +58,12 @@ typedef struct parking_spot
 
 typedef struct parking
 {
+	unsigned int id;
 	parking_spot_t *spots;
 	size_t count;
 	timestamp_t time;
+	input_stream_t connection_in;
+	output_stream_t connection_out;
 	graphics_t graphics;
 	image_t background_image;
 } parking_t;

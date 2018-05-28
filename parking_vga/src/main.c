@@ -46,6 +46,9 @@ int main(void)
 			case PARKING_ERROR_CONFIG_PARSE:
 				LOG("Error parsing parking.txt\n");
 				break;
+			case PARKING_ERROR_INIT_CONNECTION:
+				LOG("Error initializing connection\n");
+				break;
 			case PARKING_ERROR_INIT_GRAPHICS:
 				LOG("Error initializing graphics\n");
 				break;

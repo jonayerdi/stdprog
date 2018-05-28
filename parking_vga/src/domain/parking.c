@@ -10,6 +10,7 @@
 #include "domain/parking.h"
 
 #include "domain/parking_spot_state_machine.h"
+#include "domain/parking_connection.h"
 
 #include "io/memory.h"
 #include "io/stream.h"
@@ -41,7 +42,7 @@
 /*--------------------------------------------------------------------------------------*/
 
 static int _parking_spot_init(parking_t *parking, parking_spot_t *output, json_object config);
-static int _parking_spot_step(parking_spot_t *input, timestamp_t time);
+static int _parking_spot_step(parking_t *parking, parking_spot_t *input, timestamp_t time);
 static void _parking_spot_render(graphics_t graphics, parking_spot_t input);
 static void _parking_spot_destroy(parking_spot_t *input);
 
@@ -65,7 +66,7 @@ static int _parking_spot_init(parking_t *parking, parking_spot_t *output, json_o
 	return error;
 }
 
-static int _parking_spot_step(parking_spot_t *input, timestamp_t time)
+static int _parking_spot_step(parking_t *parking, parking_spot_t *input, timestamp_t time)
 {
 	//Only for demo purposes, parking mode and state would be set via remote commands
 	if(gpio_get(input->forced_source) == GPIO_VALUE_TAKEN)
@@ -88,6 +89,11 @@ static int _parking_spot_step(parking_spot_t *input, timestamp_t time)
 	}
 	//State machine
 	STATE_MACHINE_ejecutar(&input->state_machine);
+	//Send new data to server
+	if(input->timestamp == time)
+	{
+		parking_connection_spot_update(parking->connection_out, *input);
+	}
 	return 0;
 }
 
@@ -132,7 +138,7 @@ int parking_init(parking_t *output, const char *config_filename)
 	input_stream_t config_file;
 	char config[CONFIG_FILE_MAX_BYTES];
 	size_t config_length;
-	json_object parking, graphics, layout;
+	json_object parking, graphics, layout, connection;
 	json_array spots;
 	json_allocator allocator = { .malloc = memory_allocate, .free = memory_free };
 	//Read config file
@@ -144,17 +150,26 @@ int parking_init(parking_t *output, const char *config_filename)
 	result = (int)json_read_object(config, config_length, &allocator, &parking, &config_length);
 	if(result)
 		return PARKING_ERROR_CONFIG_PARSE;
+	connection = *((json_object *)json_object_find_key(parking, "connection", 0).value);
 	graphics = *((json_object *)json_object_find_key(parking, "graphics", 0).value);
 	layout = *((json_object *)json_object_find_key(parking, "layout", 0).value);
 	spots = *((json_array *)json_object_find_key(layout, "spots", 0).value);
 	//Time
 	CLOCK_SET(output->time, 0, 0, 0, 0);
+	//Connection
+	result = stream_config_get_iostream(&output->connection_in, &output->connection_out
+			, (json_string)json_object_find_key(connection, "name", 0).value);
+	if(result)
+		return PARKING_ERROR_INIT_CONNECTION;
+	
 	//Graphics
 	result = graphics_config_get(&output->graphics
 			, (json_string)json_object_find_key(graphics, "device", 0).value
 			, (json_string)json_object_find_key(graphics, "mode", 0).value);
 	if(result)
 		return PARKING_ERROR_INIT_GRAPHICS;
+	//Parking ID
+	output->id = (unsigned int)*((json_integer *)json_object_find_key(layout, "id", 0).value);
 	//Background image
 	input_stream_t image_input;
 	result = stream_config_get_input(&image_input, (json_string)json_object_find_key(layout, "background", 0).value);
@@ -177,6 +192,8 @@ int parking_init(parking_t *output, const char *config_filename)
 	json_free_object(&allocator, parking);
 	//Destroy config input stream
 	stream_close_input(config_file);
+	//Initialize connection with server
+	parking_connection_init(output->connection_out, *output);
 	return 0;
 }
 
@@ -184,7 +201,7 @@ int parking_step(parking_t *input, timestamp_t time_diff)
 {
 	CLOCK_INCREASE(input->time, 0, 0, 0, time_diff);
 	for(size_t i = 0 ; i < input->count ; i++)
-		_parking_spot_step(&input->spots[i], input->time);
+		_parking_spot_step(input, &input->spots[i], input->time);
 	return 0;
 }
 
@@ -202,6 +219,8 @@ void parking_destroy(parking_t *input)
 	for(size_t i = 0 ; i < input->count ; i++)
 		_parking_spot_destroy(&input->spots[i]);
 	memory_free(input->spots);
+	//Connection
+	stream_close_output(input->connection_out);
 	//Graphics
 	graphics_destroy(input->graphics);
 	//Background image

@@ -66,6 +66,11 @@ size_t stream_write_string(output_stream_t stream, const char *input)
 	return stream_write(stream, input, strlen(input));
 }
 
+size_t stream_write32(output_stream_t stream, uint32_t input)
+{
+	return stream_write(stream, (const char *)&input, sizeof(uint32_t));
+}
+
 /*****************************************************************************************
 *                                         stream.c
 *****************************************************************************************/
