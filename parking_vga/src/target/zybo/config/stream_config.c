@@ -11,6 +11,7 @@
 
 #include "hal/stdio_stream.h"
 #include "hal/file_stream.h"
+#include "hal/lwip_tcp_stream.h"
 
 #include <string.h>
 
@@ -40,6 +41,22 @@ int stream_config_get_output(output_stream_t *out, const char *filename)
 	{
 		return file_output_stream(out, filename);
 	}
+}
+
+int stream_config_get_iostream(input_stream_t *istream, output_stream_t *ostream, const char *filename)
+{
+	char address[64] = {0};
+	char port[16] = {0};
+	const char *separator = strchr(filename, ':');
+	if(separator)
+	{
+		size_t pos = (size_t)(separator - filename);
+		memcpy(address, filename, pos);
+		memcpy(port, filename + pos + 1, strlen(filename) - (pos + 1));
+
+		return lwip_tcp_stream(istream, ostream, address, port);
+	}
+	else return -13;
 }
 
 /*****************************************************************************************

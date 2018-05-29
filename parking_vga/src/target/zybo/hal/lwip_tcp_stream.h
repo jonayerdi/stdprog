@@ -1,42 +1,48 @@
 /*************************************************************************************//**
-* @file stream_config.h
-* @brief Mapping of stream implementations to their names
+* @file lwip_tcp_stream.h
+* @brief Implementation of TCP streams with lwIP RAW API
 * @author Jon Ayerdi
 *****************************************************************************************/
-#ifndef SRC_CONFIG_STREAM_CONFIG_H_
-#define SRC_CONFIG_STREAM_CONFIG_H_
+#ifndef SRC_HAL_LWIP_TCP_STREAM_H_
+#define SRC_HAL_LWIP_TCP_STREAM_H_
 
 /*--------------------------------------------------------------------------------------*/
 /*                                       INCLUDES                                       */
 /*--------------------------------------------------------------------------------------*/
+
 #include "io/stream.h"
+
+#include "lwip/tcp.h"
+
+#include <stdlib.h>
+
+/*--------------------------------------------------------------------------------------*/
+/*                                        TYPES                                         */
+/*--------------------------------------------------------------------------------------*/
+
+typedef struct lwip_tcp_stream
+{
+	volatile struct tcp_pcb *socket;
+	volatile int closed;
+	volatile size_t received;
+	volatile char buffer[512];
+} lwip_tcp_stream_t;
 
 /*--------------------------------------------------------------------------------------*/
 /*                            PUBLIC FUNCTION DECLARATIONS                              */
 /*--------------------------------------------------------------------------------------*/
 
-/** @brief gets an input stream by name.
- *  @param out the stream.
- *  @param filename name of the stream.
- *  @return 0 (OK) or nonzero (error).
- */
-int stream_config_get_input(input_stream_t *out, const char *filename);
-/** @brief gets an output stream by name.
- *  @param out the stream.
- *  @param filename name of the stream.
- *  @return 0 (OK) or nonzero (error).
- */
-int stream_config_get_output(output_stream_t *out, const char *filename);
-/** @brief gets iostreams by name.
+/** @brief initializes a lwIP TCP connection.
  *  @param istream the input stream.
  *  @param ostream the output stream.
- *  @param filename name of the stream.
+ *  @param address destination address.
+ *  @param port destination port.
  *  @return 0 (OK) or nonzero (error).
  */
-int stream_config_get_iostream(input_stream_t *istream, output_stream_t *ostream, const char *filename);
+int lwip_tcp_stream(input_stream_t *istream, output_stream_t *ostream, const char *address, const char *port);
 
-#endif /* SRC_CONFIG_STREAM_CONFIG_H_ */
+#endif /* SRC_HAL_LWIP_TCP_STREAM_H_ */
 
 /*****************************************************************************************
-*                                   stream_config.h
+*                                   lwip_tcp_stream.h
 *****************************************************************************************/
