@@ -18,7 +18,6 @@
 #include "xscutimer.h"
 #include "xparameters.h"
 #include "xil_exception.h"
-#include "netif/xadapter.h"
 #include "lwip/init.h"
 #include "lwip/err.h"
 
@@ -31,8 +30,10 @@
 static unsigned char mac_ethernet_address[6] =
 	{ 0x00, 0x0a, 0x35, 0x00, 0x01, 0x02 };
 static struct ip_addr ipaddr, netmask, gw;
+struct netif *netif, server_netif;
 static volatile int connected;
 static volatile struct tcp_pcb *sock;
+static volatile int initialized = 0;
 
 /*--------------------------------------------------------------------------------------*/
 /*                            		 PRIVATE FUNCTIONS                                  */
@@ -42,6 +43,8 @@ uint32_t _ip_addr_from_str(const char *str);
 uint32_t _u32_from_str(const char *str, size_t len);
 int _lwip_init(void);
 err_t _tcp_connected(void *arg, struct tcp_pcb *tpcb, err_t err);
+err_t recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err);
+err_t sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len);
 
 static size_t _read(char *str, size_t size, void *context);
 static size_t _write(const char *str, size_t size, void *context);
@@ -49,7 +52,7 @@ static void _discard(void *context);
 static void _flush(void *context);
 static void _close(void *context);
 
-uint32_t _ip_addr_from_str(const char *str) //TODO: Doesn't work
+uint32_t _ip_addr_from_str(const char *str)
 {
 	uint32_t value = 0;
 	int digit = 0;
@@ -59,8 +62,14 @@ uint32_t _ip_addr_from_str(const char *str) //TODO: Doesn't work
 	{
 		for(i = 0 ; str[index] != '.' ; i++, index++)
 		{
+			if(str[index] == '\0')
+			{
+				index--;
+				break;
+			}
 			nums[i] = str[index];
 		}
+		index++;
 		value |= (_u32_from_str(nums, i) << (8*digit));
 	}
 	return value;
@@ -76,13 +85,20 @@ uint32_t _u32_from_str(const char *str, size_t len)
 	return value;
 }
 
+int _lwip_tcp_is_initialized(void)
+{
+	return initialized;
+}
+struct netif *_lwip_tcp_get_netif(void)
+{
+	return netif;
+}
+
 int _lwip_init(void)
 {
-	static int initialized = 0;
 	if(!initialized)
 	{
 		/* Netif */
-		struct netif *netif, server_netif;
 		netif = &server_netif;
 		/* IP */
 		IP4_ADDR(&ipaddr,  192, 168,   0, 254);
@@ -95,13 +111,6 @@ int _lwip_init(void)
 		if (!xemac_add(netif, &ipaddr, &netmask, &gw, mac_ethernet_address, XPAR_XEMACPS_0_BASEADDR))
 			return -1;
 		netif_set_default(netif);
-		/* SCU Timer + interrupts */
-		XScuTimer TimerInstance;
-		XScuTimer_Config *ConfigPtr = XScuTimer_LookupConfig(XPAR_SCUTIMER_DEVICE_ID);
-		XScuTimer_CfgInitialize(&TimerInstance, ConfigPtr, ConfigPtr->BaseAddr);
-		Xil_ExceptionEnableMask(XIL_EXCEPTION_IRQ);
-		XScuTimer_EnableInterrupt(&TimerInstance);
-		XScuTimer_Start(&TimerInstance);
 		/* specify that the network if is up */
 		netif_set_up(netif);
 		/* done */
@@ -118,8 +127,7 @@ err_t _tcp_connected(void *arg, struct tcp_pcb *tpcb, err_t err)
 	return ERR_OK;
 }
 
-err_t recv_callback(void *arg, struct tcp_pcb *tpcb,
-                               struct pbuf *p, err_t err)
+err_t recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err)
 {
 	lwip_tcp_stream_t *conn = (lwip_tcp_stream_t *)arg;
 	if(err != ERR_OK || !p)
@@ -137,6 +145,13 @@ err_t recv_callback(void *arg, struct tcp_pcb *tpcb,
 	return ERR_OK;
 }
 
+err_t sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len)
+{
+	lwip_tcp_stream_t *conn = (lwip_tcp_stream_t *)arg;
+	conn->sending = 0;
+	return ERR_OK;
+}
+
 static size_t _read(char *str, size_t size, void *context)
 {
 	lwip_tcp_stream_t *conn = (lwip_tcp_stream_t *)context;
@@ -151,7 +166,14 @@ static size_t _write(const char *str, size_t size, void *context)
 {
 	lwip_tcp_stream_t *conn = (lwip_tcp_stream_t *)context;
 	while (tcp_sndbuf(conn->socket) < size);
+	conn->sending = 1;
 	err_t err = tcp_write(conn->socket, str, size, 1);
+	if(err == ERR_OK)
+		err = tcp_output(conn->socket);
+	if(err == ERR_OK)
+	{
+		while(conn->sending);
+	}
 	return err == ERR_OK ? size : 0;
 }
 
@@ -163,7 +185,8 @@ static void _discard(void *context)
 
 static void _flush(void *context)
 {
-	/* Hopefully unused */
+	lwip_tcp_stream_t *conn = (lwip_tcp_stream_t *)context;
+	tcp_output(conn->socket);
 }
 
 static void _close(void *context)
@@ -202,8 +225,9 @@ int lwip_tcp_stream(input_stream_t *istream, output_stream_t *ostream, const cha
 	conn->socket = sock;
 	conn->closed = 0;
 	conn->received = 0;
-	tcp_recv(conn->socket, recv_callback);
 	tcp_arg(conn->socket, (void*)conn);
+	tcp_recv(conn->socket, recv_callback);
+	tcp_sent(conn->socket, sent_callback);
 	/* Implement input_stream_t */
 	istream->read = _read;
 	istream->discard = _discard;

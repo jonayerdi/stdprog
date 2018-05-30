@@ -11,9 +11,16 @@
 #include "hal/scu_timer.h"
 
 #include "io/memory.h"
+#include "hal/lwip_tcp_stream.h"
 
 #include <xscugic.h>
 #include <stdint.h>
+
+#include "lwip/tcp.h"
+
+/* lwIP */
+void tcp_fasttmr(void);
+void tcp_slowtmr(void);
 
 /*--------------------------------------------------------------------------------------*/
 /*                            		 PRIVATE FUNCTIONS                                  */
@@ -91,6 +98,20 @@ static void _destroy(void *context)
 
 static void _scu_timer_handler(scu_timer_t *scu_timer)
 {
+	/* lwIP */
+	if(_lwip_tcp_is_initialized())
+	{
+		if(scu_timer->timer->ticks % (scu_timer->timer->freq / 4) == 0)
+		{
+			tcp_fasttmr(); /* Every 250 ms */
+			if(scu_timer->timer->ticks % (scu_timer->timer->freq / 2) == 0)
+			{
+				tcp_slowtmr(); /* Every 500 ms */
+			}
+		}
+		xemacif_input(_lwip_tcp_get_netif());
+	}
+	/* User callbacks */
 	scu_timer->timer_handler(scu_timer->timer);
 	XScuTimer_ClearInterruptStatus(&scu_timer->driver);
 }

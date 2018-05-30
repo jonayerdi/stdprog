@@ -12,6 +12,8 @@
 
 #include "io/stream.h"
 
+#include "netif/xadapter.h"
+
 #include "lwip/tcp.h"
 
 #include <stdlib.h>
@@ -24,9 +26,17 @@ typedef struct lwip_tcp_stream
 {
 	volatile struct tcp_pcb *socket;
 	volatile int closed;
+	volatile int sending;
 	volatile size_t received;
 	volatile char buffer[512];
 } lwip_tcp_stream_t;
+
+/*--------------------------------------------------------------------------------------*/
+/*                                   PRIVATE STUFF                                      */
+/*--------------------------------------------------------------------------------------*/
+
+int _lwip_tcp_is_initialized(void);
+struct netif *_lwip_tcp_get_netif(void);
 
 /*--------------------------------------------------------------------------------------*/
 /*                            PUBLIC FUNCTION DECLARATIONS                              */
