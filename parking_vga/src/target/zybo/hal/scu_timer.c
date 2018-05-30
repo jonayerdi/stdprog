@@ -16,8 +16,6 @@
 #include <xscugic.h>
 #include <stdint.h>
 
-#include "lwip/tcp.h"
-
 /* lwIP */
 void tcp_fasttmr(void);
 void tcp_slowtmr(void);

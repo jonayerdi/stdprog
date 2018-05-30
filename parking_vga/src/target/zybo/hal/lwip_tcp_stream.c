@@ -172,7 +172,7 @@ static size_t _write(const char *str, size_t size, void *context)
 		err = tcp_output(conn->socket);
 	if(err == ERR_OK)
 	{
-		while(conn->sending);
+		//while(conn->sending);
 	}
 	return err == ERR_OK ? size : 0;
 }
@@ -216,7 +216,9 @@ int lwip_tcp_stream(input_stream_t *istream, output_stream_t *ostream, const cha
 	uint16_t prt = (uint16_t)_u32_from_str(port, strlen(port));
 	connected = 0;
 	sock = NULL;
-	err_t err = tcp_connect(socket, &ip, prt, _tcp_connected);
+	err_t err = tcp_bind(socket, IP_ADDR_ANY, 0);
+	if(err != ERR_OK) return -2;
+	err = tcp_connect(socket, &ip, prt, _tcp_connected);
 	if(err != ERR_OK) return -1;
 	while(!connected);
 	if(!sock) return -1;
