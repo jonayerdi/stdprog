@@ -30,6 +30,22 @@ int main(void)
 	/* Init logger */
 	logger_init();
 
+	/* Init timer */
+	result = timer_config_get_default(&timer);
+	if(result != 0)
+	{
+		LOG("[error] SCU Timer init\n");
+		return 0;
+	}
+
+	/* Start timer */
+	result = timer_start(&timer, TIMER_FREQ);
+	if(result != 0)
+	{
+		LOG("[error] Starting timer\n");
+		return 0;
+	}
+
 	/* Start the demo */
 	LOG("[start] Starting application\n");
 
@@ -68,21 +84,8 @@ int main(void)
 		return 0;
 	}
 
-	/* Init timer */
-	result = timer_config_get_default(&timer);
-	if(result != 0)
-	{
-		LOG("[error] SCU Timer init\n");
-		return 0;
-	}
-
-	/* Start timer */
-	result = timer_start(&timer, TIMER_FREQ, _timer_callback);
-	if(result != 0)
-	{
-		LOG("[error] Starting timer\n");
-		return 0;
-	}
+	/* Set timer callback */
+	timer_set_callback(&timer, _timer_callback);
 
 	/* Demo started */
 	LOG("[done] Starting application\n");

@@ -26,9 +26,14 @@ static void _timer_handler(ttimer_t *timer)
 /*                             PUBLIC FUNCTION DEFINITIONS                              */
 /*--------------------------------------------------------------------------------------*/
 
-int timer_start(ttimer_t *timer, uint32_t freq, void(*callback)(ttimer_t timer))
+void timer_set_callback(ttimer_t *timer, void(*callback)(ttimer_t timer))
 {
 	timer->callback = callback;
+}
+
+int timer_start(ttimer_t *timer, uint32_t freq)
+{
+	timer->callback = NULL;
 	timer->freq = freq;
 	timer->period = (1000 / freq) + 1;
 	timer->ticks = 0;

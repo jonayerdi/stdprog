@@ -10,6 +10,7 @@
 /*                                       INCLUDES                                       */
 /*--------------------------------------------------------------------------------------*/
 #include <stdint.h> /* uint32_t, uint64_t */
+#include <stddef.h> /* NULL */
 
 /*--------------------------------------------------------------------------------------*/
 /*                                        TYPES                                         */
@@ -33,13 +34,17 @@ typedef struct ttimer
 /*                           PUBLIC FUNCTION DECLARATIONS                               */
 /*--------------------------------------------------------------------------------------*/
 
+/** @brief sets the timer callback.
+ *  @param callback callback function to call every timer interval.
+ */
+void timer_set_callback(ttimer_t *timer, void(*callback)(ttimer_t timer));
 /** @brief starts the timer.
  *  @param timer the timer.
  *  @param freq timer frequence in HZ.
  *  @param callback callback function to call every timer interval.
  *  @return 0 (OK) or nonzero (error).
  */
-int timer_start(ttimer_t *timer, uint32_t freq, void(*callback)(ttimer_t timer));
+int timer_start(ttimer_t *timer, uint32_t freq);
 /** @brief stops the timer.
  *  @param timer the timer.
  */
