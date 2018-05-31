@@ -11,6 +11,7 @@
 #include "hal/lwip_tcp_stream.h"
 
 #include "io/memory.h"
+#include "config/logger.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -39,10 +40,13 @@ static volatile int initialized = 0;
 /*                            		 PRIVATE FUNCTIONS                                  */
 /*--------------------------------------------------------------------------------------*/
 
+char _str_err(err_t e);
 uint32_t _ip_addr_from_str(const char *str);
 uint32_t _u32_from_str(const char *str, size_t len);
 int _lwip_init(void);
+void _tcp_connect(const char *address, const char *port);
 err_t _tcp_connected(void *arg, struct tcp_pcb *tpcb, err_t err);
+void _tcp_error_connect(void *arg, err_t err);
 err_t recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err);
 err_t sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len);
 
@@ -51,6 +55,47 @@ static size_t _write(const char *str, size_t size, void *context);
 static void _discard(void *context);
 static void _flush(void *context);
 static void _close(void *context);
+
+char _str_err(err_t e)
+{
+	switch(e)
+	{
+	case 0:
+		return '0';
+	case -1:
+		return '1';
+	case -2:
+		return '2';
+	case -3:
+		return '3';
+	case -4:
+		return '4';
+	case -5:
+		return '5';
+	case -6:
+		return '6';
+	case -7:
+		return '7';
+	case -8:
+		return '8';
+	case -9:
+		return '9';
+	case -10:
+		return 'A';
+	case -11:
+		return 'B';
+	case -12:
+		return 'C';
+	case -13:
+		return 'D';
+	case -14:
+		return 'E';
+	case -15:
+		return 'F';
+	default:
+		return 'U';
+	}
+}
 
 uint32_t _ip_addr_from_str(const char *str)
 {
@@ -119,12 +164,59 @@ int _lwip_init(void)
 	return 0;
 }
 
+void _tcp_connect(const char *address, const char *port)
+{
+	struct tcp_pcb *socket;
+	struct ip_addr ip;
+	err_t err;
+
+	ip.addr = _ip_addr_from_str(address);
+	uint16_t prt = (uint16_t)_u32_from_str(port, strlen(port));
+
+	while(1)
+	{
+		connected = 0;
+		LOG("Connecting to "); LOG(address); LOG(":"); LOG(port); LOG("\n");
+		socket = tcp_new();
+		tcp_err(socket, _tcp_error_connect);
+		sock = NULL;
+		err = tcp_bind(socket, IP_ADDR_ANY, 0);
+		if(err == ERR_OK)
+		{
+			LOG("Socket bound\n");
+			err = tcp_connect(socket, &ip, prt, _tcp_connected);
+			if(err == ERR_OK)
+			{
+				while(!connected);
+				if(sock) break;
+			}
+			else
+			{
+				char e[2] = {_str_err(err), '\0'};
+				LOG("Error connecting: "); LOG(e); LOG("\n");
+			}
+		}
+		else
+		{
+			LOG("Socket bind failed\n");
+		}
+		tcp_close(socket);
+	}
+	LOG("Connected to"); LOG(address); LOG(":"); LOG(port); LOG("\n");
+	tcp_nagle_enable (sock);
+}
+
 err_t _tcp_connected(void *arg, struct tcp_pcb *tpcb, err_t err)
 {
 	if(err == ERR_OK)
 		sock = tpcb;
 	connected = 1;
 	return ERR_OK;
+}
+
+void _tcp_error_connect(void *arg, err_t err)
+{
+	connected = 1;
 }
 
 err_t recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err)
@@ -207,21 +299,8 @@ int lwip_tcp_stream(input_stream_t *istream, output_stream_t *ostream, const cha
 	/* Init lwIP */
 	error = _lwip_init();
 	if(error) return error;
-
 	/* Init lwIP TCP block */
-	struct tcp_pcb *socket;
-	socket = tcp_new();
-	struct ip_addr ip;
-	ip.addr = _ip_addr_from_str(address);
-	uint16_t prt = (uint16_t)_u32_from_str(port, strlen(port));
-	connected = 0;
-	sock = NULL;
-	err_t err = tcp_bind(socket, IP_ADDR_ANY, 0);
-	if(err != ERR_OK) return -2;
-	err = tcp_connect(socket, &ip, prt, _tcp_connected);
-	if(err != ERR_OK) return -1;
-	while(!connected);
-	if(!sock) return -1;
+	_tcp_connect(address, port);
 	/* Setup context */
 	lwip_tcp_stream_t *conn = memory_allocate(sizeof(lwip_tcp_stream_t));
 	conn->socket = sock;
