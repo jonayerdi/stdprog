@@ -163,11 +163,19 @@ int parking_init(parking_t *output, const char *config_filename)
 		return PARKING_ERROR_INIT_CONNECTION;
 	
 	//Graphics
-	result = graphics_config_get(&output->graphics
-			, (json_string)json_object_find_key(graphics, "device", 0).value
-			, (json_string)json_object_find_key(graphics, "mode", 0).value);
-	if(result)
-		return PARKING_ERROR_INIT_GRAPHICS;
+	if(graphics.count > 1)
+	{
+		result = graphics_config_get(&output->graphics
+				, (json_string)json_object_find_key(graphics, "device", 0).value
+				, (json_string)json_object_find_key(graphics, "mode", 0).value);
+		if(result)
+			return PARKING_ERROR_INIT_GRAPHICS;
+		output->has_graphics = 1;
+	}
+	else
+	{
+		output->has_graphics = 0;
+	}
 	//Parking ID
 	output->id = (unsigned int)*((json_integer *)json_object_find_key(layout, "id", 0).value);
 	//Background image
@@ -207,10 +215,13 @@ int parking_step(parking_t *input, timestamp_t time_diff)
 
 void parking_render(parking_t input)
 {
-	graphics_draw_image(input.graphics, input.background_image, 0, 0, compositing_mode_binary);
-	for(size_t i = 0 ; i < input.count ; i++)
-		_parking_spot_render(input.graphics, input.spots[i]);
-	graphics_render(input.graphics);
+	if(input.has_graphics)
+	{
+		graphics_draw_image(input.graphics, input.background_image, 0, 0, compositing_mode_binary);
+		for(size_t i = 0 ; i < input.count ; i++)
+			_parking_spot_render(input.graphics, input.spots[i]);
+		graphics_render(input.graphics);
+	}
 }
 
 void parking_destroy(parking_t *input)
@@ -222,7 +233,8 @@ void parking_destroy(parking_t *input)
 	//Connection
 	stream_close_output(input->connection_out);
 	//Graphics
-	graphics_destroy(input->graphics);
+	if(input->has_graphics)
+		graphics_destroy(input->graphics);
 	//Background image
 	image_free(&input->background_image);
 }

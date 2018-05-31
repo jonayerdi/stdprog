@@ -2,10 +2,7 @@
     "connection": {
         "name": "192.168.0.12:6969"
     },
-    "graphics": {
-        "device": "hdmi",
-        "mode": "800x600"
-    },
+    "graphics": {},
     "layout": {
         "id": 1,
         "background": "parking.bmp",

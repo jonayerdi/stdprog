@@ -65,6 +65,7 @@ typedef struct parking
 	input_stream_t connection_in;
 	output_stream_t connection_out;
 	graphics_t graphics;
+	char has_graphics;
 	image_t background_image;
 } parking_t;
 

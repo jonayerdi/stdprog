@@ -202,7 +202,7 @@ void _tcp_connect(const char *address, const char *port)
 		}
 		tcp_close(socket);
 	}
-	LOG("Connected to"); LOG(address); LOG(":"); LOG(port); LOG("\n");
+	LOG("Connected to "); LOG(address); LOG(":"); LOG(port); LOG("\n");
 	tcp_nagle_enable (sock);
 }
 
