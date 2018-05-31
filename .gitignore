@@ -16,4 +16,6 @@ platform.c
 !parking_vga/parking*.json
 !parking_vga/parking.bmp
 parking_vga_bootloader
+zybo_bsp
+zybo_base_system
 SDL2
