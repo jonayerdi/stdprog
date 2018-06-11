@@ -3,6 +3,18 @@
         "name": "192.168.0.12:6969"
     },
     "graphics": {},
+    "cameras": [
+		{
+			"id": 1,
+			"image_files": [
+				"image1.png",
+				"image2.png",
+				"image3.png",
+				"image4.png",
+                "image5.png"
+			]
+		}
+	],
     "layout": {
         "id": 1,
         "background": "parking.bmp",
@@ -81,7 +93,7 @@
             },
             {
                 "id": 8,
-                "input_source": "fixed0",
+                "input_source": "sensor0",
                 "forced_source": "fixed0",
                 "x1": 490,
                 "x2": 602,
@@ -90,7 +102,7 @@
             },
             {
                 "id": 9,
-                "input_source": "fixed1",
+                "input_source": "sensor1",
                 "forced_source": "fixed0",
                 "x1": 650,
                 "x2": 762,

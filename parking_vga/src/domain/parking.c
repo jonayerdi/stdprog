@@ -25,6 +25,8 @@
 #include "config/graphics_config.h"
 #include "config/stream_config.h"
 
+#include <string.h>
+
 /*--------------------------------------------------------------------------------------*/
 /*                                        MACROS                                        */
 /*--------------------------------------------------------------------------------------*/
@@ -139,7 +141,7 @@ int parking_init(parking_t *output, const char *config_filename)
 	char config[CONFIG_FILE_MAX_BYTES];
 	size_t config_length;
 	json_object parking, graphics, layout, connection;
-	json_array spots;
+	json_array cameras, spots;
 	json_allocator allocator = { .malloc = memory_allocate, .free = memory_free };
 	//Read config file
 	result = stream_config_get_input(&config_file, config_filename);
@@ -152,6 +154,7 @@ int parking_init(parking_t *output, const char *config_filename)
 		return PARKING_ERROR_CONFIG_PARSE;
 	connection = *((json_object *)json_object_find_key(parking, "connection", 0).value);
 	graphics = *((json_object *)json_object_find_key(parking, "graphics", 0).value);
+	cameras = *((json_array *)json_object_find_key(parking, "cameras", 0).value);
 	layout = *((json_object *)json_object_find_key(parking, "layout", 0).value);
 	spots = *((json_array *)json_object_find_key(layout, "spots", 0).value);
 	//Time
@@ -175,6 +178,24 @@ int parking_init(parking_t *output, const char *config_filename)
 	else
 	{
 		output->has_graphics = 0;
+	}
+	//Cameras
+	output->cameraCount = cameras.count;
+	output->cameras = memory_allocate(sizeof(parking_camera_t) * cameras.count);
+	for(size_t i = 0 ; i < cameras.count; i++)
+	{
+		json_object camera = *((json_object *)cameras.values[i].value);
+		output->cameras[i].id = (uint32_t)*(json_integer *)json_object_find_key(camera, "id", 0).value;
+		json_array imageFiles = *((json_array *)json_object_find_key(camera, "image_files", 0).value);
+		output->cameras[i].imageFilesCount = imageFiles.count;
+		output->cameras[i].imageFilesIndex = 0;
+		output->cameras[i].imageFiles = memory_allocate(sizeof(char *)*imageFiles.count);
+		for(size_t j = 0 ; j < imageFiles.count; j++)
+		{
+			json_string imageFile = (json_string)imageFiles.values[j].value;
+			output->cameras[i].imageFiles[j] = memory_allocate(sizeof(char)*(strlen(imageFile)+1));
+			strcpy(output->cameras[i].imageFiles[j], imageFile);
+		}
 	}
 	//Parking ID
 	output->id = (unsigned int)*((json_integer *)json_object_find_key(layout, "id", 0).value);
@@ -207,9 +228,13 @@ int parking_init(parking_t *output, const char *config_filename)
 
 int parking_step(parking_t *input, timestamp_t time_diff)
 {
+	static int count = 0;
 	CLOCK_INCREASE(input->time, 0, 0, 0, time_diff);
 	for(size_t i = 0 ; i < input->count ; i++)
 		_parking_spot_step(input, &input->spots[i], input->time);
+	if(!((count++)%(60*5)))
+		for(size_t i = 0 ; i < input->cameraCount ; i++)
+			parking_connection_image_update(input->connection_out, &input->cameras[i]);
 	return 0;
 }
 
@@ -230,6 +255,14 @@ void parking_destroy(parking_t *input)
 	for(size_t i = 0 ; i < input->count ; i++)
 		_parking_spot_destroy(&input->spots[i]);
 	memory_free(input->spots);
+	//Cameras
+	for(size_t i = 0 ; i < input->cameraCount ; i++)
+	{
+		for(size_t j = 0 ; j < input->cameras[i].imageFilesCount ; j++)
+			memory_free(input->cameras[i].imageFiles[j]);
+		memory_free(input->cameras[i].imageFiles);
+	}
+	memory_free(input->cameras);
 	//Connection
 	stream_close_output(input->connection_out);
 	//Graphics

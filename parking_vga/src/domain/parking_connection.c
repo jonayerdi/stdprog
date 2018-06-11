@@ -10,6 +10,8 @@
 #include "domain/parking_connection.h"
 #include "domain/parking_spot_state_machine.h"
 
+#include "config/stream_config.h"
+
 #include <stdint.h>
 
 /*--------------------------------------------------------------------------------------*/
@@ -68,6 +70,26 @@ void parking_connection_spot_update(output_stream_t ostream, parking_spot_t park
             stream_write32(ostream, PARKING_SPOT_MODE_NORMAL);
             break;
     }
+}
+
+void parking_connection_image_update(output_stream_t ostream, parking_camera_t *camera)
+{
+	//Read image
+	uint8_t buffer[1024*30];
+	size_t imageSize;
+	input_stream_t imageStream;
+	int result = stream_config_get_input(&imageStream, camera->imageFiles[camera->imageFilesIndex]);
+	camera->imageFilesIndex = (camera->imageFilesIndex + 1) % camera->imageFilesCount;
+	if(!result)
+		imageSize = stream_read(imageStream, buffer, 1024*30);
+	else 
+		imageSize = 0;
+	//Send message
+	stream_write32(ostream, MESSAGE_CAMERA_IMAGE_UPDATE);
+	stream_write32(ostream, camera->id);
+	stream_write32(ostream, imageSize);
+	for(size_t i = 0 ; i < imageSize ; i++)
+		stream_write(ostream, &buffer[i], sizeof(uint8_t));
 }
 
 /*****************************************************************************************

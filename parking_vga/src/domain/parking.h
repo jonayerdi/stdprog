@@ -42,6 +42,14 @@ typedef enum parking_spot_mode
 	parking_spot_mode_forced
 } parking_spot_mode_t;
 
+typedef struct parking_camera
+{
+	uint32_t id;
+	char **imageFiles;
+	size_t imageFilesCount;
+	size_t imageFilesIndex;
+} parking_camera_t;
+
 typedef struct parking_spot
 {
 	unsigned int id;
@@ -59,6 +67,8 @@ typedef struct parking_spot
 typedef struct parking
 {
 	unsigned int id;
+	parking_camera_t *cameras;
+	size_t cameraCount;
 	parking_spot_t *spots;
 	size_t count;
 	timestamp_t time;

@@ -6,6 +6,18 @@
         "device": "hdmi",
         "mode": "800x600"
     },
+	"cameras": [
+		{
+			"id": 1,
+			"image_files": [
+				"image1.png",
+				"image2.png",
+				"image3.png",
+				"image4.png",
+                "image5.png"
+			]
+		}
+	],
     "layout": {
         "id": 1,
         "background": "parking.bmp",
