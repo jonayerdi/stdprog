@@ -81,9 +81,11 @@ void parking_connection_image_update(output_stream_t ostream, parking_camera_t *
 	int result = stream_config_get_input(&imageStream, camera->imageFiles[camera->imageFilesIndex]);
 	camera->imageFilesIndex = (camera->imageFilesIndex + 1) % camera->imageFilesCount;
 	if(!result)
+	{
 		imageSize = stream_read(imageStream, buffer, 1024*30);
-	else 
-		imageSize = 0;
+		stream_close_input(imageStream);
+	}
+	else imageSize = 0;
 	//Send message
 	stream_write32(ostream, MESSAGE_CAMERA_IMAGE_UPDATE);
 	stream_write32(ostream, camera->id);
