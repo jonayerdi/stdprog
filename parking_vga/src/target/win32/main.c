@@ -12,8 +12,8 @@
 
 #define TIMER_FREQ 60
 
-static ttimer_t timer;
-static parking_t parking;
+ttimer_t timer;
+parking_t parking;
 
 static void _timer_callback(ttimer_t _timer);
 

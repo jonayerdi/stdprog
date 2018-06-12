@@ -4,7 +4,7 @@ set output_dir=Debug_win32
 set sdllib=.\SDL2\lib\x86\SDL2.lib
 set sdldll=.\SDL2\lib\x86\SDL2.dll
 set includes=/Isrc /Isrc\target\win32 /ISDL2\include
-set cfiles=.\src\*.c .\src\domain\*.c .\src\io\*.c .\src\lib\*.c .\src\target\win32\config\*.c .\src\target\win32\hal\*.c
+set cfiles=.\src\domain\*.c .\src\io\*.c .\src\lib\*.c .\src\target\win32\*.c .\src\target\win32\config\*.c .\src\target\win32\hal\*.c
 
 mkdir %output_dir%
 
