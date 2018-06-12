@@ -74,15 +74,15 @@ void parking_connection_spot_update(output_stream_t ostream, parking_spot_t park
 
 void parking_connection_image_update(output_stream_t ostream, parking_camera_t *camera)
 {
-	//Read image
-	uint8_t buffer[1024*30];
+	//Read image (MAX SIZE 100 KB)
+	uint8_t buffer[1024*100];
 	size_t imageSize;
 	input_stream_t imageStream;
 	int result = stream_config_get_input(&imageStream, camera->imageFiles[camera->imageFilesIndex]);
 	camera->imageFilesIndex = (camera->imageFilesIndex + 1) % camera->imageFilesCount;
 	if(!result)
 	{
-		imageSize = stream_read(imageStream, buffer, 1024*30);
+		imageSize = stream_read(imageStream, buffer, 1024*100);
 		stream_close_input(imageStream);
 	}
 	else imageSize = 0;
