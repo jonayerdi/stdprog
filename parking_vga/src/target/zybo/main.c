@@ -26,6 +26,7 @@ static void _timer_callback(ttimer_t _timer)
 int main(void)
 {
 	int result;
+	timer_tick_t ticks = 0;
 
 	/* Init logger */
 	logger_init();
@@ -85,9 +86,17 @@ int main(void)
 	}
 
 	/* Set timer callback */
-	timer_set_callback(&timer, _timer_callback);
+	//timer_set_callback(&timer, _timer_callback);
 
 	/* Demo started */
 	LOG("[done] Starting application\n");
-	idle_loop();
+	for(;;)
+	{
+		if(timer.ticks != ticks)
+		{
+			ticks = timer.ticks;
+			parking_step(&parking, 125);
+			parking_render(parking);
+		}
+	}
 }
