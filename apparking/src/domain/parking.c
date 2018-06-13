@@ -232,7 +232,7 @@ int parking_step(parking_t *input, timestamp_t time_diff)
 	CLOCK_INCREASE(input->time, 0, 0, 0, time_diff);
 	for(size_t i = 0 ; i < input->count ; i++)
 		_parking_spot_step(input, &input->spots[i], input->time);
-	if(!((count++)%(60)))
+	if(!((count++)%(40)))
 		for(size_t i = 0 ; i < input->cameraCount ; i++)
 			parking_connection_image_update(input->connection_out, &input->cameras[i]);
 	return 0;

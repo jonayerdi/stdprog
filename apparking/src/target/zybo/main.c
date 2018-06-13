@@ -10,18 +10,10 @@
 
 #include "domain/parking.h"
 
-#define TIMER_FREQ 60
+#define TIMER_FREQ 20
 
 ttimer_t timer;
 parking_t parking;
-
-static void _timer_callback(ttimer_t _timer);
-
-static void _timer_callback(ttimer_t _timer)
-{
-	parking_step(&parking, 125);
-	parking_render(parking);
-}
 
 int main(void)
 {
@@ -95,7 +87,7 @@ int main(void)
 		if(timer.ticks != ticks)
 		{
 			ticks = timer.ticks;
-			parking_step(&parking, 125);
+			parking_step(&parking, 500);
 			parking_render(parking);
 		}
 	}
