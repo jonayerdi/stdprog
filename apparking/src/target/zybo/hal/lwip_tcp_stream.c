@@ -146,7 +146,7 @@ int _lwip_init(void)
 		/* Netif */
 		netif = &server_netif;
 		/* IP */
-		IP4_ADDR(&ipaddr,  192, 168,   0, 254);
+		IP4_ADDR(&ipaddr,  192, 168,   0, 222);
 		IP4_ADDR(&netmask, 255, 255, 255,  0);
 		IP4_ADDR(&gw,      192, 168,   0,  1);
 		/* lwip_init */
