@@ -19,3 +19,4 @@ parking_vga_bootloader
 zybo_bsp
 zybo_base_system
 SDL2
+!apparking/test/*

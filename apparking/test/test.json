@@ -1,0 +1,66 @@
+{
+    "connection": {
+        "name": "127.0.0.1:6969"
+    },
+    "graphics": {},
+	"cameras": [
+		{
+			"id": 1,
+			"image_files": [
+				"image1.png",
+				"image2.png"
+			]
+		},
+        {
+			"id": 2,
+			"image_files": [
+				"image1.png",
+				"image2.png",
+                "image3.png",
+                "image4.png"
+			]
+		}
+	],
+    "layout": {
+        "id": 1,
+        "background": "parking.bmp",
+        "spots": [
+            {
+                "id": 0,
+                "input_source": "fixed0",
+                "forced_source": "fixed0",
+                "x1": 0,
+                "x2": 1,
+                "y1": 2,
+                "y2": 3
+            },
+            {
+                "id": 1,
+                "input_source": "fixed0",
+                "forced_source": "fixed0",
+                "x1": 4,
+                "x2": 5,
+                "y1": 6,
+                "y2": 7
+            },
+            {
+                "id": 2,
+                "input_source": "fixed0",
+                "forced_source": "fixed0",
+                "x1": 8,
+                "x2": 9,
+                "y1": 10,
+                "y2": 11
+            },
+            {
+                "id": 3,
+                "input_source": "fixed0",
+                "forced_source": "fixed0",
+                "x1": 100,
+                "x2": 200,
+                "y1": 400,
+                "y2": 800
+            }
+        ]
+    }
+}
